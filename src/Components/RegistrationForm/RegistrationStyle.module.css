@@ -1,0 +1,17 @@
+.formRow {
+  width: 60%;
+  margin-left: 19%;
+}
+.validationCard {
+  background-color: #8ea4c8;
+  border-radius: 10px;
+}
+
+.validationCard2 {
+  background-color: #d8c8ca;
+  border-radius: 10px;
+}
+.selectValue{
+  padding: 4px 14px 5px 3px;
+
+}
