@@ -1,17 +1,20 @@
 import * as Yup from 'yup';
 export const SignupSchema = Yup.object().shape({
-    firstName: Yup.string().min(3).max(25).matches(/^[A-Z][a-zA-Z]*$/, '1st letter must be capital').required("Please  enter your first name"),
-    lastName: Yup.string().min(2).max(25).matches(/^[A-Z][a-zA-Z]*$/, '1st letter must be capital').required("Please  enter your last name"),
+    firstName: Yup.string().min(3,"First Name at least 3 character").max(25).matches(/^[A-Z][a-zA-Z]*$/, '1st word must be alphabet capital letter').required("Please  enter your first name"),
+    lastName: Yup.string().min(4,"Last Name at least 4 character").max(30).matches(/^[A-Z][a-zA-Z]*$/, '1st word must be alphabet capital letter').required("Please  enter your last name"),
+
     email: Yup.string().email("Please enter a valid email").required("Please  enter your email"),
+
     gender: Yup.string().required("Gender is required"),
+
     qualification: Yup.array().required("Qualification is required"),
   
     country: Yup.string()
     .required('Country is required'),
 
     state: Yup.string()
-    .required('State is required')
-    .matches(/^(?:AL|AK|AS|AZ|AR|CA|CO|CT|DE|DC|FM|FL|GA|GU|HI|HR|ID|IL|IN|IA|KS|KY|LA|ME|MH|MD|MA|MI|MN|MS|MO|MT|NE|NV|NH|NJ|NM|NY|NC|ND|MP|OH|OK|OR|PW|PA|PR|RI|SC|SD|TN|TX|UT|UP|VT|VI|VA|WA|WV|WI|WY)$/i, 'Invalid state'),
+    .required('State is required ')
+    .matches(/^(?:Orissa|Punjab|Rajasthan|Bihar|Goa|Assam)$/i, 'Invalid state'),
 
     city: Yup.string()
     .required('City is required')

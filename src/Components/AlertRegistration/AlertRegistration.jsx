@@ -5,7 +5,7 @@ import { Country, State, City } from "country-state-city";
 
 import Select from "react-select";
 
-import Style from "./RegistrationStyle.module.css";
+import Style from "./AlertRegistration.module.css";
 import { useNavigate } from "react-router-dom";
 
 const initialValues = {
@@ -22,7 +22,7 @@ const initialValues = {
   confirmPassword: "",
 };
 
-const RegistrationForm = () => {
+const AlertRegistration = () => {
   const navigate = useNavigate();
   const { values, errors, handleChange, setFieldValue, setValues, handleSubmit, handleReset, handleInputBlur } = useFormik({
     initialValues: initialValues,
@@ -31,6 +31,7 @@ const RegistrationForm = () => {
       console.log(values);
       alert("Data saved successfully");
       resetForm();
+
       navigate("/registration", { state: { formData: values } });
     },
   });
@@ -40,12 +41,6 @@ const RegistrationForm = () => {
     <>
       <h3 className="mb-4 text-uppercase text-center">Registration form With Inline Validation</h3>
       <section classNameName=" bg-dark">
-        {/* {Object.keys(errors).length === 0 && isSubmit ? (
-          <div className="ui message success">signed in Successfully</div>
-        ) : (
-          <pre>{JSON.stringify(values)}</pre>
-        )} */}
-
         <form onSubmit={handleSubmit}>
           <div className="container ">
             <div className={`row d-flex justify-content-center align-items-center  ${Style.formRow}`}>
@@ -69,9 +64,16 @@ const RegistrationForm = () => {
                                 onChange={handleChange}
                                 name="firstName"
                               />
-                              <p className="text-danger">{errors.firstName}</p>
                             </div>
+                            {/* <p className="text-danger">{errors.firstName}</p> */}
                           </div>
+
+                          {console.log(errors.firstName)}
+                          {errors.firstName && (
+                            <div className="alert alert-danger" role="alert">
+                              {errors.firstName}
+                            </div>
+                          )}
 
                           {/* -----------------------------------last name------------------------ */}
                           <div className="col-md-6 mb-1">
@@ -87,7 +89,11 @@ const RegistrationForm = () => {
                                 onChange={handleChange}
                                 name="lastName"
                               />
-                              <p className="text-danger">{errors.lastName}</p>
+                              {errors.lastName && (
+                                <div className="alert alert-danger" role="alert">
+                                  {errors.lastName}
+                                </div>
+                              )}
                             </div>
                           </div>
                         </div>
@@ -106,7 +112,11 @@ const RegistrationForm = () => {
                                 onChange={handleChange}
                                 name="email"
                               />
-                              <p className="text-danger">{errors.email}</p>
+                              {errors.email && (
+                                <div className="alert alert-danger" role="alert">
+                                  {errors.email}
+                                </div>
+                              )}
                             </div>
                           </div>
 
@@ -124,7 +134,11 @@ const RegistrationForm = () => {
                                 value={values.phoneNumber}
                                 onChange={handleChange}
                               />
-                              <p className="text-danger">{errors.phoneNumber}</p>
+                              {errors.phoneNumber && (
+                                <div className="alert alert-danger" role="alert">
+                                  {errors.phoneNumber}
+                                </div>
+                              )}
                             </div>
                           </div>
                         </div>
@@ -189,7 +203,11 @@ const RegistrationForm = () => {
                               />
                             </div>
 
-                            <p className="text-danger">{errors.qualification}</p>
+                            {errors.qualification && (
+                              <div className="alert alert-danger" role="alert">
+                                {errors.qualification}
+                              </div>
+                            )}
                           </div>
 
                           {/* -----------------------------------------gender------------------------- */}
@@ -240,8 +258,11 @@ const RegistrationForm = () => {
                                 checked={values.gender === "other"}
                               />
                             </div>
-
-                            <p className="text-danger">{errors.gender}</p>
+                            {errors.gender && (
+                              <div className="alert alert-danger" role="alert">
+                                {errors.gender}
+                              </div>
+                            )}
                           </div>
                         </div>
                         {/* -----------------------------------------country------------------------- */}
@@ -250,21 +271,6 @@ const RegistrationForm = () => {
                             Country
                           </label>{" "}
                         </div>
-
-                        {/* <Select
-                            options={Country.getAllCountries()}
-                            getOptionLabel={(options) => {
-                              return options["name"];
-                            }}
-                            getOptionValue={(options) => {
-                              return options["name"];
-                            }}
-                            value={values.country}
-                            onChange={(value) => {
-                              setValues({ country: value, state: null, city: null }, false);
-                            }}
-                          /> */}
-
 
                         <div className="col-md-12 mb-1">
                           <select className={`select ${Style.selectValue}`} name="country" onChange={handleChange}>
@@ -276,9 +282,11 @@ const RegistrationForm = () => {
                             <option value="Canada">Canada</option>
                           </select>
                         </div>
-                        <p className="text-danger">{errors.country}</p>
-
-
+                        {errors.gender && (
+                          <div className="alert alert-danger" role="alert">
+                            {errors.gender}
+                          </div>
+                        )}
                         {/* -----------------------------------state------------------------ */}
                         <div className="row">
                           <div className="col-md-6 mb-1">
@@ -294,24 +302,14 @@ const RegistrationForm = () => {
                                 onChange={handleChange}
                                 name="state"
                               />
-                              {/* <Select
-                                options={State?.getStatesOfCountry(values.country?.isoCode)}
-                                getOptionLabel={(options) => {
-                                  return options["name"];
-                                }}
-                                getOptionValue={(options) => {
-                                  return options["name"];
-                                }}
-                                value={values.state}
-                                onChange={(value) => {
-                                  setValues({ state: value, city: null }, false);
-                                }}
-                              /> */}
-                              <p className="text-danger">{errors.state}</p>
+
+                              {errors.state && (
+                                <div className="alert alert-danger" role="alert">
+                                  {errors.state}
+                                </div>
+                              )}
                             </div>
                           </div>
-
-
                           {/* -----------------------------------city------------------------ */}
                           <div className="col-md-6 mb-1">
                             <div className="form-outline">
@@ -327,23 +325,15 @@ const RegistrationForm = () => {
                                 name="city"
                                 autoComplete="off"
                               />
-                              {/* <Select
-                                options={City.getCitiesOfState(values.state?.countryCode, values.state?.isoCode)}
-                                getOptionLabel={(options) => {
-                                  return options["name"];
-                                }}
-                                getOptionValue={(options) => {
-                                  return options["name"];
-                                }}
-                                value={values.state}
-                                onChange={(value) => setFieldValue("city", value)}
-                              /> */}
 
-                              <p className="text-danger">{errors.city}</p>
+                              {errors.city && (
+                                <div className="alert alert-danger" role="alert">
+                                  {errors.city}
+                                </div>
+                              )}
                             </div>
                           </div>{" "}
                         </div>
-
 
                         <div className="row mb-2">
                           <div className="col-md-4 mb-1">
@@ -356,12 +346,16 @@ const RegistrationForm = () => {
                               <option value="Japan">Japan</option>
                               <option value="Canada">Canada</option>
                             </select>
-                            <p className="text-danger">{errors.country}</p>
+                            {errors.country && (
+                              <div className="alert alert-danger" role="alert">
+                                {errors.country}
+                              </div>
+                            )}
                           </div>
 
                           <div className="col-md-4 mb-1">
                             <h6>States</h6>
-                            <select className={`select ${Style.selectValue3}`} name="country" onChange={handleChange}>
+                            <select className={`select ${Style.selectValue3}`} name="state" onChange={handleChange}>
                               <option>Select Your States</option>
                               <option value="Orissa">Orissa</option>
                               <option value="Punjab">Punjab</option>
@@ -369,12 +363,16 @@ const RegistrationForm = () => {
                               <option value="Goa">Goa</option>
                               <option value="Assam">Assam</option>
                             </select>
-                            <p className="text-danger">{errors.state}</p>
+                            {errors.state && (
+                              <div className="alert alert-danger" role="alert">
+                                {errors.state}
+                              </div>
+                            )}
                           </div>
 
                           <div className="col-md-4 mb-1">
                             <h6>City</h6>
-                            <select className={`select ${Style.selectValue4}`} name="country" onChange={handleChange}>
+                            <select className={`select ${Style.selectValue4}`} name="city" onChange={handleChange}>
                               <option>Select Your City</option>
                               <option value="Sirhind">Sirhind</option>
                               <option value="Chandigarh">Chandigarh</option>
@@ -382,7 +380,11 @@ const RegistrationForm = () => {
                               <option value="Jalandhar">Jalandhar</option>
                               <option value="Rajpura">Rajpura</option>
                             </select>
-                            <p className="text-danger">{errors.city}</p>
+                            {errors.city && (
+                              <div className="alert alert-danger" role="alert">
+                                {errors.city}
+                              </div>
+                            )}
                           </div>
                         </div>
                         {/* -----------------------------------------password------------------------- */}
@@ -401,7 +403,11 @@ const RegistrationForm = () => {
                                 name="password"
                                 autoComplete="new-password"
                               />{" "}
-                              <p className="text-danger">{errors.password}</p>
+                              {errors.password && (
+                                <div className="alert alert-danger" role="alert">
+                                  {errors.password}
+                                </div>
+                              )}
                             </div>
                           </div>
 
@@ -419,7 +425,11 @@ const RegistrationForm = () => {
                                 onChange={handleChange}
                                 name="confirmPassword"
                               />
-                              <p className="text-danger">{errors.confirmPassword}</p>
+                              {errors.confirmPassword && (
+                                <div className="alert alert-danger" role="alert">
+                                  {errors.confirmPassword}
+                                </div>
+                              )}
                             </div>
                           </div>
                         </div>
@@ -444,4 +454,4 @@ const RegistrationForm = () => {
   );
 };
 
-export default RegistrationForm;
+export default AlertRegistration;
