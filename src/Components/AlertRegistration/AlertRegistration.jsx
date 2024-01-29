@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Formik, useFormik } from "formik";
 import { SignupSchema } from "../../schemas";
 import { Country, State, City } from "country-state-city";
@@ -8,34 +8,148 @@ import Select from "react-select";
 import Style from "./AlertRegistration.module.css";
 import { useNavigate } from "react-router-dom";
 
-const initialValues = {
-  firstName: "",
-  lastName: "",
-  email: "",
-  phoneNumber: "",
-  qualification: "",
-  gender: "",
-  country: "",
-  state: "",
-  city: "",
-  password: "",
-  confirmPassword: "",
-};
-
 const AlertRegistration = () => {
+  const initialValues = {
+    firstName: "",
+    lastName: "",
+    email: "",
+    phoneNumber: "",
+    qualification: [],
+    gender: "",
+    country: "",
+    state: "",
+    city: "",
+    password: "",
+    confirmPassword: "",
+  };
+  const [values, setValues] = useState(initialValues);
+  const [errors, setErrors] = useState({});
+  const [isSubmit, setIsSubmit] = useState(false);
   const navigate = useNavigate();
-  const { values, errors, handleChange, setFieldValue, setValues, handleSubmit, handleReset, handleInputBlur } = useFormik({
-    initialValues: initialValues,
-    validationSchema: SignupSchema,
-    onSubmit: (values, { resetForm }) => {
-      console.log(values);
-      alert("Data saved successfully");
-      resetForm();
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
 
+    if (type === "checkbox") {
+      const newValue = checked ? [...values[name], value] : values[name].filter((val) => val !== value);
+      setValues({ ...values, [name]: newValue });
+    } else {
+      setValues({ ...values, [name]: value });
+    }
+  };
+
+  const handleReset = () => {
+    setValues(initialValues);
+    setErrors({});
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const errors = validate(values);
+    setErrors(errors);
+    setIsSubmit(true);
+
+    if (Object.keys(errors).length > 0) {
+      let errorMessage = "";
+      Object.keys(errors).forEach((key) => {
+        errorMessage += `${errors[key]}\n`;
+      });
+      alert(errorMessage);
+    } else {
       navigate("/registration", { state: { formData: values } });
-    },
-  });
-  console.log(navigate);
+    }
+  };
+
+  const validate = (values) => {
+    const errors = {};
+    const nameRegExp = /^[A-Z][a-z]*$/;
+    const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    const phoneNumberPattern = /^\d{10}$/;
+    const passwordRegExp = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,20}$/;
+
+    //  -----------------------------------firstName---------------------------------------
+    if (!values.firstName) {
+      errors.firstName = "First Name is required!";
+    } else if (!nameRegExp.test(values.firstName)) {
+      errors.firstName = "First Name is not valid. Please use only letters and start with a capital letter";
+    } else if (values.firstName.length < 4) {
+      errors.firstName = "First Name must be more than 4 character!";
+    } else if (values.firstName.length > 30) {
+      errors.firstName = "First Name can not exceed more than 30 character!";
+    }
+
+    //  -----------------------------------lastName--------------------------------------------
+    if (!values.lastName) {
+      errors.lastName = "Last Name is required!";
+    } else if (!nameRegExp.test(values.lastName)) {
+      errors.lastName = "Last Name is not valid. Please use only letters and start with a capital letter";
+    } else if (values.lastName.length < 5) {
+      errors.lastName = "Last Name must be more than 5 character!";
+    } else if (values.lastName.length > 30) {
+      errors.lastName = "Last Name can not exceed more than 30 character!";
+    }
+
+    //  -----------------------------------email-------------------------------------------------
+    if (!values.email) {
+      errors.email = "Email is required!";
+    } else if (!regex.test(values.email)) {
+      errors.email = "This is not a validate email format!";
+    }
+
+    //  -----------------------------------phoneNumber----------------------------------------------
+    if (!values.phoneNumber) {
+      errors.phoneNumber = "Phone Number is required!";
+    } else if (!phoneNumberPattern.test(values.phoneNumber)) {
+      errors.phoneNumber = "Phone Number is not valid. Please enter only integer and 10 digits!";
+    } else if (values.phoneNumber.length < 10) {
+      errors.phoneNumber = "Phone Number must be 10 digits!";
+    } else if (values.phoneNumber.length > 10) {
+      errors.phoneNumber = "Phone Number must be only 10 digits!";
+    }
+
+    //  -----------------------------------Qualification----------------------------------------------
+    if (!values.qualification) {
+      errors.qualification = "Qualification is required!";
+    }
+
+    //  -----------------------------------gender----------------------------------------------
+    if (!values.gender) {
+      errors.gender = "Gender is required!";
+    }
+
+    //  -----------------------------------Country----------------------------------------------
+    if (!values.country) {
+      errors.country = "Country is required!";
+    }
+
+    //  -----------------------------------State----------------------------------------------
+    if (!values.state) {
+      errors.state = "State is required!";
+    }
+
+    //  -----------------------------------City----------------------------------------------
+    if (!values.city) {
+      errors.city = "City is required!";
+    }
+
+    //  ------------------------------------password------------------------------------------------
+    if (!values.password) {
+      errors.password = "Password is required!";
+    } else if (values.password.length < 6) {
+      errors.password = "Password must be more than 5 characters!";
+    } else if (values.password.length > 15) {
+      errors.password = "Password can not exceed more than 15 characters!";
+    } else if (!passwordRegExp.test(values.password)) {
+      errors.password = "Password must contain at least one uppercase, one lowercase, one number and a special character!";
+    }
+
+    //  -----------------------------------confirm password--------------------------------------------
+    if (!values.confirmPassword) {
+      errors.confirmPassword = "Confirm Password should not be empty";
+    } else if (values.confirmPassword !== values.password) {
+      errors.confirmPassword = "Password and Confirm Password should be the same";
+    }
+    return errors;
+  };
 
   return (
     <>
@@ -65,15 +179,7 @@ const AlertRegistration = () => {
                                 name="firstName"
                               />
                             </div>
-                            {/* <p className="text-danger">{errors.firstName}</p> */}
                           </div>
-
-                          {console.log(errors.firstName)}
-                          {errors.firstName && (
-                            <div className="alert alert-danger" role="alert">
-                              {errors.firstName}
-                            </div>
-                          )}
 
                           {/* -----------------------------------last name------------------------ */}
                           <div className="col-md-6 mb-1">
@@ -89,11 +195,6 @@ const AlertRegistration = () => {
                                 onChange={handleChange}
                                 name="lastName"
                               />
-                              {errors.lastName && (
-                                <div className="alert alert-danger" role="alert">
-                                  {errors.lastName}
-                                </div>
-                              )}
                             </div>
                           </div>
                         </div>
@@ -112,11 +213,6 @@ const AlertRegistration = () => {
                                 onChange={handleChange}
                                 name="email"
                               />
-                              {errors.email && (
-                                <div className="alert alert-danger" role="alert">
-                                  {errors.email}
-                                </div>
-                              )}
                             </div>
                           </div>
 
@@ -134,11 +230,6 @@ const AlertRegistration = () => {
                                 value={values.phoneNumber}
                                 onChange={handleChange}
                               />
-                              {errors.phoneNumber && (
-                                <div className="alert alert-danger" role="alert">
-                                  {errors.phoneNumber}
-                                </div>
-                              )}
                             </div>
                           </div>
                         </div>
@@ -202,12 +293,6 @@ const AlertRegistration = () => {
                                 checked={values.qualification.includes("Master")}
                               />
                             </div>
-
-                            {errors.qualification && (
-                              <div className="alert alert-danger" role="alert">
-                                {errors.qualification}
-                              </div>
-                            )}
                           </div>
 
                           {/* -----------------------------------------gender------------------------- */}
@@ -258,11 +343,6 @@ const AlertRegistration = () => {
                                 checked={values.gender === "other"}
                               />
                             </div>
-                            {errors.gender && (
-                              <div className="alert alert-danger" role="alert">
-                                {errors.gender}
-                              </div>
-                            )}
                           </div>
                         </div>
                         {/* -----------------------------------------country------------------------- */}
@@ -282,11 +362,7 @@ const AlertRegistration = () => {
                             <option value="Canada">Canada</option>
                           </select>
                         </div>
-                        {errors.gender && (
-                          <div className="alert alert-danger" role="alert">
-                            {errors.gender}
-                          </div>
-                        )}
+
                         {/* -----------------------------------state------------------------ */}
                         <div className="row">
                           <div className="col-md-6 mb-1">
@@ -302,12 +378,6 @@ const AlertRegistration = () => {
                                 onChange={handleChange}
                                 name="state"
                               />
-
-                              {errors.state && (
-                                <div className="alert alert-danger" role="alert">
-                                  {errors.state}
-                                </div>
-                              )}
                             </div>
                           </div>
                           {/* -----------------------------------city------------------------ */}
@@ -325,12 +395,6 @@ const AlertRegistration = () => {
                                 name="city"
                                 autoComplete="off"
                               />
-
-                              {errors.city && (
-                                <div className="alert alert-danger" role="alert">
-                                  {errors.city}
-                                </div>
-                              )}
                             </div>
                           </div>{" "}
                         </div>
@@ -346,11 +410,6 @@ const AlertRegistration = () => {
                               <option value="Japan">Japan</option>
                               <option value="Canada">Canada</option>
                             </select>
-                            {errors.country && (
-                              <div className="alert alert-danger" role="alert">
-                                {errors.country}
-                              </div>
-                            )}
                           </div>
 
                           <div className="col-md-4 mb-1">
@@ -363,11 +422,6 @@ const AlertRegistration = () => {
                               <option value="Goa">Goa</option>
                               <option value="Assam">Assam</option>
                             </select>
-                            {errors.state && (
-                              <div className="alert alert-danger" role="alert">
-                                {errors.state}
-                              </div>
-                            )}
                           </div>
 
                           <div className="col-md-4 mb-1">
@@ -380,11 +434,6 @@ const AlertRegistration = () => {
                               <option value="Jalandhar">Jalandhar</option>
                               <option value="Rajpura">Rajpura</option>
                             </select>
-                            {errors.city && (
-                              <div className="alert alert-danger" role="alert">
-                                {errors.city}
-                              </div>
-                            )}
                           </div>
                         </div>
                         {/* -----------------------------------------password------------------------- */}
@@ -403,11 +452,6 @@ const AlertRegistration = () => {
                                 name="password"
                                 autoComplete="new-password"
                               />{" "}
-                              {errors.password && (
-                                <div className="alert alert-danger" role="alert">
-                                  {errors.password}
-                                </div>
-                              )}
                             </div>
                           </div>
 
@@ -425,11 +469,6 @@ const AlertRegistration = () => {
                                 onChange={handleChange}
                                 name="confirmPassword"
                               />
-                              {errors.confirmPassword && (
-                                <div className="alert alert-danger" role="alert">
-                                  {errors.confirmPassword}
-                                </div>
-                              )}
                             </div>
                           </div>
                         </div>
@@ -453,5 +492,4 @@ const AlertRegistration = () => {
     </>
   );
 };
-
 export default AlertRegistration;
