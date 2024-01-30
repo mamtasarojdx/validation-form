@@ -1,0 +1,35 @@
+.formRow {
+  width: 40%;
+  margin-left: 30%;
+  height: 200px;
+}
+.validationCard {
+  background-color: #ece1cb;
+  border-radius: 10px;
+  height: 400px;
+}
+
+.inputText1 {
+  margin-left: 15%;
+  margin-top: 20%;
+}
+.inputText2 {
+  margin-left: 15%;
+}
+.inputMail {
+  width: 180%;
+  margin-left: 15%;
+}
+
+.loginBtn {
+  cursor: pointer;
+  font-weight: 700;
+  color: #fff;
+  background-color: #ea4235;
+  border-color: #ea4235;
+  border-radius: 0.25rem;
+  padding: 11px 20px;
+  width: 86%;
+  margin-right: 7%;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}

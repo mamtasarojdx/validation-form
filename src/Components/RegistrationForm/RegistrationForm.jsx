@@ -1,8 +1,7 @@
-import React from "react";
-import { Formik, useFormik } from "formik";
 import { SignupSchema } from "../../schemas";
 import { Country, State, City } from "country-state-city";
-
+import React from "react";
+import { Formik, useFormik } from "formik";
 import Select from "react-select";
 
 import Style from "./RegistrationStyle.module.css";
@@ -130,20 +129,35 @@ const RegistrationForm = () => {
                         </div>
                         {/* -----------------------------------------qualification------------------------- */}
                         <div className="row">
-                          <div className="col-md-6  justify-content-start align-items-center ">
+                        <div className="col-md-6  justify-content-start align-items-center ">
                             <h6 className="mb-0 me-4 fw-bold">Qualification: </h6>
 
-                            <div className="form-check form-check-inline mt-2 mb-0 me-4">
-                              <label className="form-check-label " for="femaleGender">
-                                10
+                            <div className="form-check form-check-inline mt-2 mb-0">
+                              <label className="form-check-label " for="maleGender">
+                                Master
                               </label>
                               <input
                                 className="form-check-input"
                                 type="checkbox"
                                 name="qualification"
-                                value="10"
+                                value="Master"
                                 onChange={handleChange}
-                                checked={values.qualification.includes("10")}
+                                checked={values.qualification.includes("Master")}
+                              />
+                            </div>
+
+
+                            <div className="form-check form-check-inline mt-2 mb-0">
+                              <label className="form-check-label " for="maleGender">
+                                Bachelor
+                              </label>
+                              <input
+                                className="form-check-input"
+                                type="checkbox"
+                                name="qualification"
+                                value="Bachelor"
+                                onChange={handleChange}
+                                checked={values.qualification.includes("Bachelor")}
                               />
                             </div>
 
@@ -161,37 +175,26 @@ const RegistrationForm = () => {
                               />
                             </div>
 
-                            <div className="form-check form-check-inline mt-2 mb-0">
-                              <label className="form-check-label " for="maleGender">
-                                Bachelor
+
+                            <div className="form-check form-check-inline mt-2 mb-0 me-4">
+                              <label className="form-check-label " for="femaleGender">
+                                10
                               </label>
                               <input
                                 className="form-check-input"
                                 type="checkbox"
                                 name="qualification"
-                                value="Bachelor"
+                                value="10"
                                 onChange={handleChange}
-                                checked={values.qualification.includes("Bachelor")}
+                                checked={values.qualification.includes("10")}
                               />
                             </div>
 
-                            <div className="form-check form-check-inline mt-2 mb-0">
-                              <label className="form-check-label " for="maleGender">
-                                Master
-                              </label>
-                              <input
-                                className="form-check-input"
-                                type="checkbox"
-                                name="qualification"
-                                value="Master"
-                                onChange={handleChange}
-                                checked={values.qualification.includes("Master")}
-                              />
-                            </div>
+                            
+                            <p className="text-danger">{errors.gender}</p>
 
-                            <p className="text-danger">{errors.qualification}</p>
+                          
                           </div>
-
                           {/* -----------------------------------------gender------------------------- */}
                           <div className="col-md-6  justify-content-start align-items-center ">
                             <h6 className="mb-0 me-4 fw-bold">Gender: </h6>

@@ -22,6 +22,7 @@ const AlertRegistration = () => {
     password: "",
     confirmPassword: "",
   };
+
   const [values, setValues] = useState(initialValues);
   const [errors, setErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
@@ -62,43 +63,48 @@ const AlertRegistration = () => {
   const validate = (values) => {
     const errors = {};
     const nameRegExp = /^[A-Z][a-z]*$/;
-    const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-    const phoneNumberPattern = /^\d{10}$/;
+    const emailRegexExp = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    const phoneNumberExp = /^\d{10}$/;
     const passwordRegExp = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,20}$/;
 
     //  -----------------------------------firstName---------------------------------------
     if (!values.firstName) {
       errors.firstName = "First Name is required!";
-    } else if (!nameRegExp.test(values.firstName)) {
-      errors.firstName = "First Name is not valid. Please use only letters and start with a capital letter";
     } else if (values.firstName.length < 4) {
-      errors.firstName = "First Name must be more than 4 character!";
+      errors.firstName = "First Name must be more than 4 characters!";
+    } else if (!/^[A-Za-z\s]+$/.test(values.firstName)) {
+      errors.firstName = "First Name is not valid. Please enter only letters!";
+    } else if (!/^[A-Z]/.test(values.firstName)) {
+      errors.firstName = "First Name should start with a capital letter!";
     } else if (values.firstName.length > 30) {
-      errors.firstName = "First Name can not exceed more than 30 character!";
+      errors.firstName = "First Name cannot exceed 30 characters!";
     }
+
 
     //  -----------------------------------lastName--------------------------------------------
     if (!values.lastName) {
       errors.lastName = "Last Name is required!";
-    } else if (!nameRegExp.test(values.lastName)) {
-      errors.lastName = "Last Name is not valid. Please use only letters and start with a capital letter";
-    } else if (values.lastName.length < 5) {
-      errors.lastName = "Last Name must be more than 5 character!";
+    } else if (values.lastName.length < 4) {
+      errors.lastName = "Last Name must be more than 4 characters!";
+    } else if (!/^[A-Za-z\s]+$/.test(values.lastName)) {
+      errors.lastName = "Last Name is not valid. Please enter only letters!";
+    } else if (!/^[A-Z]/.test(values.lastName)) {
+      errors.lastName = "Last Name should start with a capital letter!";
     } else if (values.lastName.length > 30) {
-      errors.lastName = "Last Name can not exceed more than 30 character!";
+      errors.lastName = "Last Name cannot exceed 30 characters!";
     }
 
     //  -----------------------------------email-------------------------------------------------
     if (!values.email) {
       errors.email = "Email is required!";
-    } else if (!regex.test(values.email)) {
-      errors.email = "This is not a validate email format!";
+    } else if (!emailRegexExp.test(values.email)) {
+      errors.email = "Please enter a valid email!";
     }
 
     //  -----------------------------------phoneNumber----------------------------------------------
     if (!values.phoneNumber) {
       errors.phoneNumber = "Phone Number is required!";
-    } else if (!phoneNumberPattern.test(values.phoneNumber)) {
+    } else if (!phoneNumberExp.test(values.phoneNumber)) {
       errors.phoneNumber = "Phone Number is not valid. Please enter only integer and 10 digits!";
     } else if (values.phoneNumber.length < 10) {
       errors.phoneNumber = "Phone Number must be 10 digits!";
@@ -107,8 +113,8 @@ const AlertRegistration = () => {
     }
 
     //  -----------------------------------Qualification----------------------------------------------
-    if (!values.qualification) {
-      errors.qualification = "Qualification is required!";
+    if (values.qualification.length < 1) {
+      errors.qualification = "Please select at least one qualification!";
     }
 
     //  -----------------------------------gender----------------------------------------------
@@ -116,19 +122,19 @@ const AlertRegistration = () => {
       errors.gender = "Gender is required!";
     }
 
-    //  -----------------------------------Country----------------------------------------------
+    //  -------------------------------------Country------------------------------------------------
     if (!values.country) {
-      errors.country = "Country is required!";
+      errors.country = "Please select a country!";
     }
 
-    //  -----------------------------------State----------------------------------------------
+    //  -------------------------------------State------------------------------------------------
     if (!values.state) {
-      errors.state = "State is required!";
+      errors.state = "Please select a state!";
     }
 
-    //  -----------------------------------City----------------------------------------------
+    //  --------------------------------------City------------------------------------------------
     if (!values.city) {
-      errors.city = "City is required!";
+      errors.city = "Please select a city!";
     }
 
     //  ------------------------------------password------------------------------------------------
@@ -144,7 +150,7 @@ const AlertRegistration = () => {
 
     //  -----------------------------------confirm password--------------------------------------------
     if (!values.confirmPassword) {
-      errors.confirmPassword = "Confirm Password should not be empty";
+      errors.confirmPassword = "Confirm Password is required!";
     } else if (values.confirmPassword !== values.password) {
       errors.confirmPassword = "Password and Confirm Password should be the same";
     }
@@ -153,7 +159,7 @@ const AlertRegistration = () => {
 
   return (
     <>
-      <h3 className="mb-4 text-uppercase text-center">Registration form With Inline Validation</h3>
+      <h3 className="mb-4 text-uppercase text-center">Registration form With Alert Validation</h3>
       <section classNameName=" bg-dark">
         <form onSubmit={handleSubmit}>
           <div className="container ">
@@ -206,7 +212,7 @@ const AlertRegistration = () => {
                                 E-mail
                               </label>
                               <input
-                                type="email"
+                                type="text"
                                 id="form3Example1m1"
                                 className="form-control form-control-lg"
                                 value={values.email}
@@ -238,31 +244,17 @@ const AlertRegistration = () => {
                           <div className="col-md-6  justify-content-start align-items-center ">
                             <h6 className="mb-0 me-4 fw-bold">Qualification: </h6>
 
-                            <div className="form-check form-check-inline mt-2 mb-0 me-4">
-                              <label className="form-check-label " for="femaleGender">
-                                10
-                              </label>
-                              <input
-                                className="form-check-input"
-                                type="checkbox"
-                                name="qualification"
-                                value="10"
-                                onChange={handleChange}
-                                checked={values.qualification.includes("10")}
-                              />
-                            </div>
-
-                            <div className="form-check form-check-inline mt-2 mb-0 me-4">
+                            <div className="form-check form-check-inline mt-2 mb-0">
                               <label className="form-check-label " for="maleGender">
-                                12
+                                Master
                               </label>
                               <input
                                 className="form-check-input"
                                 type="checkbox"
                                 name="qualification"
-                                value="12"
+                                value="Master"
                                 onChange={handleChange}
-                                checked={values.qualification.includes("12")}
+                                checked={values.qualification.includes("Master")}
                               />
                             </div>
 
@@ -280,17 +272,31 @@ const AlertRegistration = () => {
                               />
                             </div>
 
-                            <div className="form-check form-check-inline mt-2 mb-0">
+                            <div className="form-check form-check-inline mt-2 mb-0 me-4">
                               <label className="form-check-label " for="maleGender">
-                                Master
+                                12
                               </label>
                               <input
                                 className="form-check-input"
                                 type="checkbox"
                                 name="qualification"
-                                value="Master"
+                                value="12"
                                 onChange={handleChange}
-                                checked={values.qualification.includes("Master")}
+                                checked={values.qualification.includes("12")}
+                              />
+                            </div>
+
+                            <div className="form-check form-check-inline mt-2 mb-0 me-4">
+                              <label className="form-check-label " for="femaleGender">
+                                10
+                              </label>
+                              <input
+                                className="form-check-input"
+                                type="checkbox"
+                                name="qualification"
+                                value="10"
+                                onChange={handleChange}
+                                checked={values.qualification.includes("10")}
                               />
                             </div>
                           </div>
@@ -472,7 +478,7 @@ const AlertRegistration = () => {
                             </div>
                           </div>
                         </div>
-                        <div className="d-flex justify-content-end pt-1 ">
+                        <div className="d-flex justify-content-end pt-1 mt-2">
                           <button type="reset" className="btn btn-danger btn-lg " onClick={handleReset}>
                             Reset
                           </button>

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import RegistrationForm from "./RegistrationForm";
 import AlertRegistration from "../AlertRegistration/AlertRegistration";
 import Style from "./RegistrationStyle.module.css";
+import LoginValidation from "../LoginValidation/LoginValidation";
 
 function HomePage() {
   const [active, IsActive] = useState(1);
@@ -15,18 +16,18 @@ function HomePage() {
         >
           Inline Validation
         </h5>
-        <h5
+        <h5  
           onClick={() => IsActive(2)}
           style={active === 2 ? { color: "white", padding: "7px 13px 10px 13px", backgroundColor: "#0d6efd", borderRadius: "7px" } : { color: "#0d6efd" }}
         >
           Alert Validation
         </h5>
-        {/* <h1 onClick={() => IsActive(3)} style={active === 3 ? { color: "brown" } : { color: "black" }} id="contact">
-          London
-        </h1>
-        <h1 onClick={() => IsActive(4)} style={active === 4 ? { color: "brown" } : { color: "black" }} id="profile">
-          Tokyo
-        </h1> */}
+        <h5 className="mx-3"
+          onClick={() => IsActive(3)}
+          style={active === 3 ? { color: "white", padding: "7px 13px 10px 13px", backgroundColor: "#0d6efd", borderRadius: "7px" } : { color: "#0d6efd" }}
+        >
+          Login Validation
+        </h5>
       </div>
 
       <div className="home-list">
@@ -42,7 +43,11 @@ function HomePage() {
           </>
         )}
 
-        {active == 3 && <></>}
+        {active == 3 && (
+          <>
+            <LoginValidation />
+          </>
+        )}
 
         {active == 4 && <></>}
       </div>
