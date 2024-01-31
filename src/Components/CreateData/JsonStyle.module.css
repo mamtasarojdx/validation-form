@@ -1,0 +1,30 @@
+.formRow {
+    width: 60%;
+    margin-left: 20%;
+  }
+  .validationCard {
+    background-color: #e4dee1;
+    border-radius: 10px;
+  }
+  
+  .selectValue {
+    padding: 8px 560px 16px 13px;
+    border-radius: 4px;
+    border-color: #cdc9c9;
+  }
+  .selectValue2 {
+    padding: 8px 70px 16px 13px;
+    border-radius: 4px;
+    border-color: #cdc9c9;
+  }
+  .selectValue3 {
+    padding: 8px 80px 16px 13px;
+    border-radius: 4px;
+    border-color: #cdc9c9;
+  }
+  .selectValue4 {
+    padding: 8px 80px 16px 13px;
+    border-radius: 4px;
+    border-color: #cdc9c9;
+  }
+  

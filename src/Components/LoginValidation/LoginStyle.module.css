@@ -1,5 +1,5 @@
 .formRow {
-  width: 40%;
+  width: 45%;
   margin-left: 30%;
   height: 200px;
 }
@@ -31,5 +31,17 @@
   padding: 11px 20px;
   width: 86%;
   margin-right: 7%;
+  border-style: none;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.eyeBtn {
+  border-style: none;
+  position: absolute;
+  left: 470px;
+  bottom: 13px;
+  cursor: pointer;
+}
+.eye {
+  position: relative;
 }

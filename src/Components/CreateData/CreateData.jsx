@@ -1,51 +1,182 @@
+import React, { useEffect, useState } from "react";
+import { Formik, useFormik } from "formik";
 import { SignupSchema } from "../../schemas";
 import { Country, State, City } from "country-state-city";
-import React from "react";
-import { Formik, useFormik } from "formik";
+
 import Select from "react-select";
 
-import Style from "./RegistrationStyle.module.css";
+import Style from "./JsonStyle.module.css";
 import { useNavigate } from "react-router-dom";
 
-const initialValues = {
-  firstName: "",
-  lastName: "",
-  email: "",
-  phoneNumber: "",
-  qualification: "",
-  gender: "",
-  country: "",
-  state: "",
-  city: "",
-  password: "",
-  confirmPassword: "",
-};
-
-const RegistrationForm = () => {
+const CreateData = () => {
+  const initialValues = {
+    firstName: "",
+    lastName: "",
+    email: "",
+    phoneNumber: "",
+    qualification: [],
+    gender: "",
+    country: "",
+    state: "",
+    city: "",
+    password: "",
+    confirmPassword: "",
+  };
+  const [users, setUsers] = useState([]);
+  const [values, setValues] = useState(initialValues);
+  const [errors, setErrors] = useState({});
+  const [isSubmit, setIsSubmit] = useState(false);
   const navigate = useNavigate();
-  const { values, errors, handleChange, setFieldValue, setValues, handleSubmit, handleReset, handleInputBlur } = useFormik({
-    initialValues: initialValues,
-    validationSchema: SignupSchema,
-    onSubmit: (values, { resetForm }) => {
-      console.log(values);
-      alert("Data saved successfully");
-      resetForm();
+
+
+  useEffect(() => {
+    fetch("/data.json")
+      .then((response) => response.json())
+      .then((data) => setUsers(data.users));
+  }, []);
+
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+
+    if (type === "checkbox") {
+      const newValue = checked ? [...values[name], value] : values[name].filter((val) => val !== value);
+      setValues({ ...values, [name]: newValue });
+    } else {
+      setValues({ ...values, [name]: value });
+    }
+  };
+
+  const handleReset = () => {
+    setValues(initialValues);
+    setErrors({});
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const errors = validate(values);
+    setErrors(errors);
+    setIsSubmit(true);
+
+    if (Object.keys(errors).length > 0) {
+      let errorMessage = "";
+      Object.keys(errors).forEach((key) => {
+        errorMessage += `${errors[key]}\n`;
+      });
+      alert(errorMessage);
+    } else {
       navigate("/registration", { state: { formData: values } });
-    },
-  });
-  console.log(navigate);
+    }
+  };
+
+  const validate = (values) => {
+    const errors = {};
+    const nameRegExp = /^[A-Z][a-z]*$/;
+    const emailRegexExp = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    const phoneNumberExp = /^\d{10}$/;
+    const passwordRegExp = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,20}$/;
+
+    //  -----------------------------------firstName---------------------------------------
+    if (!values.firstName) {
+      errors.firstName = "First Name is required!";
+    } else if (values.firstName.length < 4) {
+      errors.firstName = "First Name must be more than 4 characters!";
+    } else if (!/^[A-Za-z\s]+$/.test(values.firstName)) {
+      errors.firstName = "First Name is not valid. Please enter only letters!";
+    } else if (!/^[A-Z]/.test(values.firstName)) {
+      errors.firstName = "First Name should start with a capital letter!";
+    } else if (values.firstName.length > 30) {
+      errors.firstName = "First Name cannot exceed 30 characters!";
+    }
+
+
+    //  -----------------------------------lastName--------------------------------------------
+    if (!values.lastName) {
+      errors.lastName = "Last Name is required!";
+    } else if (values.lastName.length < 4) {
+      errors.lastName = "Last Name must be more than 4 characters!";
+    } else if (!/^[A-Za-z\s]+$/.test(values.lastName)) {
+      errors.lastName = "Last Name is not valid. Please enter only letters!";
+    } else if (!/^[A-Z]/.test(values.lastName)) {
+      errors.lastName = "Last Name should start with a capital letter!";
+    } else if (values.lastName.length > 30) {
+      errors.lastName = "Last Name cannot exceed 30 characters!";
+    }
+
+    //  -----------------------------------email-------------------------------------------------
+    if (!values.email) {
+      errors.email = "Email is required!";
+    } else if (!emailRegexExp.test(values.email)) {
+      errors.email = "Please enter a valid email!";
+    }
+
+    //  -----------------------------------phoneNumber----------------------------------------------
+    if (!values.phoneNumber) {
+      errors.phoneNumber = "Phone Number is required!";
+    } else if (!phoneNumberExp.test(values.phoneNumber)) {
+      errors.phoneNumber = "Phone Number is not valid. Please enter only integer and 10 digits!";
+    } else if (values.phoneNumber.length < 10) {
+      errors.phoneNumber = "Phone Number must be 10 digits!";
+    } else if (values.phoneNumber.length > 10) {
+      errors.phoneNumber = "Phone Number must be only 10 digits!";
+    }
+
+    //  -----------------------------------Qualification----------------------------------------------
+    if (values.qualification.length < 1) {
+      errors.qualification = "Please select at least one qualification!";
+    }
+
+    //  -----------------------------------gender----------------------------------------------
+    if (!values.gender) {
+      errors.gender = "Gender is required!";
+    }
+
+    //  -------------------------------------Country------------------------------------------------
+    if (!values.country) {
+      errors.country = "Please select a country!";
+    }
+
+    //  -------------------------------------State------------------------------------------------
+    if (!values.state) {
+      errors.state = "Please select a state!";
+    }
+
+    //  --------------------------------------City------------------------------------------------
+    if (!values.city) {
+      errors.city = "Please select a city!";
+    }
+
+    //  ------------------------------------password------------------------------------------------
+    if (!values.password) {
+      errors.password = "Password is required!";
+    } else if (values.password.length < 6) {
+      errors.password = "Password must be more than 5 characters!";
+    } else if (values.password.length > 15) {
+      errors.password = "Password can not exceed more than 15 characters!";
+    } else if (!passwordRegExp.test(values.password)) {
+      errors.password = "Password must contain at least one uppercase, one lowercase, one number and a special character!";
+    }
+
+    //  -----------------------------------confirm password--------------------------------------------
+    if (!values.confirmPassword) {
+      errors.confirmPassword = "Confirm Password is required!";
+    } else if (values.confirmPassword !== values.password) {
+      errors.confirmPassword = "Password and Confirm Password should be the same";
+    }
+    return errors;
+  };
 
   return (
     <>
-      <h3 className="mb-4 text-uppercase text-center">Registration form With Inline Validation</h3>
+      <h3 className="mb-4 text-uppercase text-center">Create Data</h3>
       <section classNameName=" bg-dark">
-        {/* {Object.keys(errors).length === 0 && isSubmit ? (
-          <div className="ui message success">signed in Successfully</div>
-        ) : (
-          <pre>{JSON.stringify(values)}</pre>
-        )} */}
-
         <form onSubmit={handleSubmit}>
+        <ul>
+        {users.map((user) => (
+          // <li key={user.id}>
+          //   {user.name} - {user.email}
+          // </li>
+       
           <div className="container ">
             <div className={`row d-flex justify-content-center align-items-center  ${Style.formRow}`}>
               <div className="col">
@@ -56,7 +187,7 @@ const RegistrationForm = () => {
                         <div className="row">
                           <div className="col-md-6 mb-1">
                             {/* -----------------------------------first name------------------------ */}
-                            <div className="form-outline">
+                            <li className="form-outline">
                               <label className="form-label fw-bold" for="form3Example1m">
                                 First Name
                               </label>
@@ -68,12 +199,11 @@ const RegistrationForm = () => {
                                 onChange={handleChange}
                                 name="firstName"
                               />
-                              <p className="text-danger">{errors.firstName}</p>
-                            </div>
+                            </li>
                           </div>
 
                           {/* -----------------------------------last name------------------------ */}
-                          <div className="col-md-6 mb-1">
+                          <li className="col-md-6 mb-1">
                             <div className="form-outline">
                               <label className="form-label fw-bold" for="form3Example1n">
                                 Last Name
@@ -86,30 +216,28 @@ const RegistrationForm = () => {
                                 onChange={handleChange}
                                 name="lastName"
                               />
-                              <p className="text-danger">{errors.lastName}</p>
                             </div>
-                          </div>
+                          </li>
                         </div>
                         <div className="row">
                           {/*--------------- ----------email--------------------------- */}
-                          <div className="col-md-6 mb-1">
+                          <li className="col-md-6 mb-1">
                             <div className="form-outline">
                               <label className="form-label fw-bold" for="form3Example1m1">
                                 E-mail
                               </label>
                               <input
-                                type="email"
+                                type="text"
                                 id="form3Example1m1"
                                 className="form-control form-control-lg"
                                 value={values.email}
                                 onChange={handleChange}
                                 name="email"
                               />
-                              <p className="text-danger">{errors.email}</p>
                             </div>
-                          </div>
+                          </li>
 
-                          <div className="col-md-6 mb-1">
+                          <li className="col-md-6 mb-1">
                             {/* -----------------------------------------phone no------------------------- */}
                             <div className="form-outline">
                               <label className="form-label fw-bold" for="form3Example1n1">
@@ -123,13 +251,12 @@ const RegistrationForm = () => {
                                 value={values.phoneNumber}
                                 onChange={handleChange}
                               />
-                              <p className="text-danger">{errors.phoneNumber}</p>
                             </div>
-                          </div>
+                          </li>
                         </div>
                         {/* -----------------------------------------qualification------------------------- */}
                         <div className="row">
-                        <div className="col-md-6  justify-content-start align-items-center ">
+                          <div className="col-md-6  justify-content-start align-items-center ">
                             <h6 className="mb-0 me-4 fw-bold">Qualification: </h6>
 
                             <div className="form-check form-check-inline mt-2 mb-0">
@@ -145,7 +272,6 @@ const RegistrationForm = () => {
                                 checked={values.qualification.includes("Master")}
                               />
                             </div>
-
 
                             <div className="form-check form-check-inline mt-2 mb-0">
                               <label className="form-check-label " for="maleGender">
@@ -175,7 +301,6 @@ const RegistrationForm = () => {
                               />
                             </div>
 
-
                             <div className="form-check form-check-inline mt-2 mb-0 me-4">
                               <label className="form-check-label " for="femaleGender">
                                 10
@@ -189,12 +314,8 @@ const RegistrationForm = () => {
                                 checked={values.qualification.includes("10")}
                               />
                             </div>
-
-                            
-                            <p className="text-danger">{errors.qualification}</p>
-
-                          
                           </div>
+
                           {/* -----------------------------------------gender------------------------- */}
                           <div className="col-md-6  justify-content-start align-items-center ">
                             <h6 className="mb-0 me-4 fw-bold">Gender: </h6>
@@ -243,8 +364,6 @@ const RegistrationForm = () => {
                                 checked={values.gender === "other"}
                               />
                             </div>
-
-                            <p className="text-danger">{errors.gender}</p>
                           </div>
                         </div>
                         {/* -----------------------------------------country------------------------- */}
@@ -253,21 +372,6 @@ const RegistrationForm = () => {
                             Country
                           </label>{" "}
                         </div>
-
-                        {/* <Select
-                            options={Country.getAllCountries()}
-                            getOptionLabel={(options) => {
-                              return options["name"];
-                            }}
-                            getOptionValue={(options) => {
-                              return options["name"];
-                            }}
-                            value={values.country}
-                            onChange={(value) => {
-                              setValues({ country: value, state: null, city: null }, false);
-                            }}
-                          /> */}
-
 
                         <div className="col-md-12 mb-1">
                           <select className={`select ${Style.selectValue}`} name="country" onChange={handleChange}>
@@ -279,8 +383,6 @@ const RegistrationForm = () => {
                             <option value="Canada">Canada</option>
                           </select>
                         </div>
-                        <p className="text-danger">{errors.country}</p>
-
 
                         {/* -----------------------------------state------------------------ */}
                         <div className="row">
@@ -297,24 +399,8 @@ const RegistrationForm = () => {
                                 onChange={handleChange}
                                 name="state"
                               />
-                              {/* <Select
-                                options={State?.getStatesOfCountry(values.country?.isoCode)}
-                                getOptionLabel={(options) => {
-                                  return options["name"];
-                                }}
-                                getOptionValue={(options) => {
-                                  return options["name"];
-                                }}
-                                value={values.state}
-                                onChange={(value) => {
-                                  setValues({ state: value, city: null }, false);
-                                }}
-                              /> */}
-                              <p className="text-danger">{errors.state}</p>
                             </div>
                           </div>
-
-
                           {/* -----------------------------------city------------------------ */}
                           <div className="col-md-6 mb-1">
                             <div className="form-outline">
@@ -330,23 +416,9 @@ const RegistrationForm = () => {
                                 name="city"
                                 autoComplete="off"
                               />
-                              {/* <Select
-                                options={City.getCitiesOfState(values.state?.countryCode, values.state?.isoCode)}
-                                getOptionLabel={(options) => {
-                                  return options["name"];
-                                }}
-                                getOptionValue={(options) => {
-                                  return options["name"];
-                                }}
-                                value={values.state}
-                                onChange={(value) => setFieldValue("city", value)}
-                              /> */}
-
-                              <p className="text-danger">{errors.city}</p>
                             </div>
                           </div>{" "}
                         </div>
-
 
                         <div className="row mb-2">
                           <div className="col-md-4 mb-1">
@@ -359,12 +431,11 @@ const RegistrationForm = () => {
                               <option value="Japan">Japan</option>
                               <option value="Canada">Canada</option>
                             </select>
-                            <p className="text-danger">{errors.country}</p>
                           </div>
 
                           <div className="col-md-4 mb-1">
                             <h6>States</h6>
-                            <select className={`select ${Style.selectValue3}`} name="country" onChange={handleChange}>
+                            <select className={`select ${Style.selectValue3}`} name="state" onChange={handleChange}>
                               <option>Select Your States</option>
                               <option value="Orissa">Orissa</option>
                               <option value="Punjab">Punjab</option>
@@ -372,12 +443,11 @@ const RegistrationForm = () => {
                               <option value="Goa">Goa</option>
                               <option value="Assam">Assam</option>
                             </select>
-                            <p className="text-danger">{errors.state}</p>
                           </div>
 
                           <div className="col-md-4 mb-1">
                             <h6>City</h6>
-                            <select className={`select ${Style.selectValue4}`} name="country" onChange={handleChange}>
+                            <select className={`select ${Style.selectValue4}`} name="city" onChange={handleChange}>
                               <option>Select Your City</option>
                               <option value="Sirhind">Sirhind</option>
                               <option value="Chandigarh">Chandigarh</option>
@@ -385,11 +455,10 @@ const RegistrationForm = () => {
                               <option value="Jalandhar">Jalandhar</option>
                               <option value="Rajpura">Rajpura</option>
                             </select>
-                            <p className="text-danger">{errors.city}</p>
                           </div>
                         </div>
                         {/* -----------------------------------------password------------------------- */}
-                        <div className="row">
+                        {/* <div className="row">
                           <div className="col-md-6 mb-1">
                             <div className="form-outline">
                               <label className="form-label fw-bold " for="form3Example1m1">
@@ -404,12 +473,11 @@ const RegistrationForm = () => {
                                 name="password"
                                 autoComplete="new-password"
                               />{" "}
-                              <p className="text-danger">{errors.password}</p>
                             </div>
-                          </div>
+                          </div> */}
 
                           {/* ----------------------------------------- confirm password------------------------- */}
-                          <div className="col-md-6 mb-1">
+                          {/* <div className="col-md-6 mb-1">
                             <div className="form-outline">
                               <label className="form-label fw-bold" for="form3Example1n1">
                                 Confirm Password
@@ -422,13 +490,12 @@ const RegistrationForm = () => {
                                 onChange={handleChange}
                                 name="confirmPassword"
                               />
-                              <p className="text-danger">{errors.confirmPassword}</p>
                             </div>
                           </div>
-                        </div>
-                        <div className="d-flex justify-content-end pt-1 ">
+                        </div> */}
+                        <div className="d-flex justify-content-end pt-1 mt-2">
                           <button type="reset" className="btn btn-danger btn-lg " onClick={handleReset}>
-                            Reset
+                            Update
                           </button>
                           <button type="submit" className="btn btn-warning  text-white btn-lg ms-2">
                             Submit
@@ -440,11 +507,11 @@ const RegistrationForm = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </div> ))}
+      </ul>
         </form>
       </section>
     </>
   );
 };
-
-export default RegistrationForm;
+export default CreateData;

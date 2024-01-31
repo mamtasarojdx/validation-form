@@ -1,15 +1,16 @@
 import React, { useState } from "react";
-
+import { FaEye } from "react-icons/fa";
+import { FaEyeSlash } from "react-icons/fa";
 import Style from "./LoginStyle.module.css";
 import { useNavigate } from "react-router-dom";
 
 const LoginValidation = () => {
   const initialValues = {
     email: "",
-
     password: "",
   };
 
+  const [showPassword, setShowPassword] = useState(false);
   const [values, setValues] = useState(initialValues);
   const [errors, setErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
@@ -21,9 +22,8 @@ const LoginValidation = () => {
     console.log(values);
   };
 
-  const handleReset = () => {
-    setValues(initialValues);
-    setErrors({});
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   const handleSubmit = (e) => {
@@ -37,10 +37,8 @@ const LoginValidation = () => {
       Object.keys(errors).forEach((key) => {
         errorMessage += `${errors[key]}\n`;
       });
-    //   alert(errorMessage);
-    }
-
-     else {
+      //   alert(errorMessage);
+    } else {
       navigate("/registration", { state: { formData: values } });
     }
   };
@@ -61,13 +59,19 @@ const LoginValidation = () => {
 
     //  ------------------------------------password------------------------------------------------
     if (!values.password) {
-      errors.password = "Password is required!";
+      errors.password = "Password is required !";
     } else if (values.password.length < 6) {
-      errors.password = "Password must be more than 5 characters!";
+      errors.password = "Password must be more than 6 characters!";
     } else if (values.password.length > 15) {
       errors.password = "Password can not exceed more than 15 characters!";
-    } else if (!passwordRegExp.test(values.password)) {
-      errors.password = "Password must contain at least one uppercase, one lowercase, one number and a special character!";
+    } else if (!/[A-Z]/.test(values.password)) {
+      errors.password = "Password must contain at least one uppercase character!";
+    } else if (!/[a-z]/.test(values.password)) {
+      errors.password = "Password must contain at least one lowercase character!";
+    } else if (!/\d/.test(values.password)) {
+      errors.password = "Password must contain at least one number!";
+    } else if (!/[^A-Za-z0-9]/.test(values.password)) {
+      errors.password = "Password must contain at least one special character!";
     }
 
     return errors;
@@ -104,7 +108,9 @@ const LoginValidation = () => {
                                 />
                               </div>
                             </div>
-                            <p className="text-danger">{errors.email}</p>
+                            <p className="text-danger" style={{ marginLeft: "40px" }}>
+                              {errors.email}
+                            </p>
 
                             {/* -----------------------------------------password------------------------- */}
                             <div className="col-md-6 mb-1">
@@ -112,18 +118,25 @@ const LoginValidation = () => {
                                 <label className={`form-label fw-bold ${Style.inputText2}`} for="form3Example1m1">
                                   Password
                                 </label>
-                                <input
-                                  type="password"
-                                  id="form3Example1m1"
-                                  className={`form-control form-control-lg ${Style.inputMail}`}
-                                  value={values.password}
-                                  onChange={handleChange}
-                                  name="password"
-                                  autocomplete="off"
-                                />{" "}
+                                <div className={`${Style.eye}`}>
+                                  <input
+                                    type={showPassword ? "text" : "password"}
+                                    id="form3Example1m1"
+                                    className={`form-control form-control-lg ${Style.inputMail}`}
+                                    value={values.password}
+                                    onChange={handleChange}
+                                    name="password"
+                                    autocomplete="off"
+                                  />{" "}
+                                  <div className={`${Style.eyeBtn}`} onClick={togglePasswordVisibility}>
+                                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                                  </div>
+                                </div>
                               </div>
                             </div>
-                            <p className="text-danger">{errors.password}</p>
+                            <p className="text-danger" style={{ marginLeft: "40px" }}>
+                              {errors.password}
+                            </p>
                           </div>
 
                           {/* ----------------------------------------- Login------------------------- */}

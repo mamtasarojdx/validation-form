@@ -4,6 +4,8 @@ import AlertRegistration from "../AlertRegistration/AlertRegistration";
 import Style from "./RegistrationStyle.module.css";
 import LoginValidation from "../LoginValidation/LoginValidation";
 
+import CreateData from "../CreateData/CreateData";
+
 function HomePage() {
   const [active, IsActive] = useState(1);
   return (
@@ -12,21 +14,45 @@ function HomePage() {
         <h5
           className="mx-3"
           onClick={() => IsActive(1)}
-          style={active === 1 ? { color: "white", padding: "7px 13px 10px 13px", backgroundColor: "#0d6efd", borderRadius: "7px" } : { color: "#0d6efd" }}
+          style={
+            active === 1
+              ? { color: "white", padding: "7px 13px 10px 13px", cursor: "pointer", backgroundColor: "#0d6efd", borderRadius: "7px" }
+              : { color: "#0d6efd", cursor: "pointer" }
+          }
         >
           Inline Validation
         </h5>
-        <h5  
+        <h5
           onClick={() => IsActive(2)}
-          style={active === 2 ? { color: "white", padding: "7px 13px 10px 13px", backgroundColor: "#0d6efd", borderRadius: "7px" } : { color: "#0d6efd" }}
+          style={
+            active === 2
+              ? { color: "white", padding: "7px 13px 10px 13px", cursor: "pointer", backgroundColor: "#0d6efd", borderRadius: "7px" }
+              : { color: "#0d6efd", cursor: "pointer" }
+          }
         >
           Alert Validation
         </h5>
-        <h5 className="mx-3"
+        <h5
+          className="mx-3"
           onClick={() => IsActive(3)}
-          style={active === 3 ? { color: "white", padding: "7px 13px 10px 13px", backgroundColor: "#0d6efd", borderRadius: "7px" } : { color: "#0d6efd" }}
+          style={
+            active === 3
+              ? { color: "white", padding: "7px 13px 10px 13px", cursor: "pointer", backgroundColor: "#0d6efd", borderRadius: "7px" }
+              : { color: "#0d6efd", cursor: "pointer" }
+          }
         >
           Login Validation
+        </h5>
+        <h5
+          className="mx-3"
+          onClick={() => IsActive(4)}
+          style={
+            active === 4
+              ? { color: "white", padding: "7px 13px 10px 13px", cursor: "pointer", backgroundColor: "#0d6efd", borderRadius: "7px" }
+              : { color: "#0d6efd", cursor: "pointer" }
+          }
+        >
+          Json
         </h5>
       </div>
 
@@ -49,7 +75,11 @@ function HomePage() {
           </>
         )}
 
-        {active == 4 && <></>}
+        {active == 4 && (
+          <>
+            <CreateData />
+          </>
+        )}
       </div>
     </>
   );

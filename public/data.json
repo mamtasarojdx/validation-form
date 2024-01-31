@@ -1,0 +1,82 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "firstName": "Mamta",
+      "lastName": "Saroj",
+      "email": "mamta.dx@gmail.com",
+      "phoneNumber": "8288832754",
+      "qualification": ["10","12","Bachelor"],
+      "gender": "Female",
+      "country": "India",
+      "state": "Punjab",
+      "city": "Sirhind"
+     
+    },
+    {
+      "id": 2,
+      "firstName": "Lakhveer",
+      "lastName": "Singh",
+      "email": "mamta@gmail.com",
+      "phoneNumber": "6744239012",
+      "qualification": ["10","12","Bachelor"],
+      "gender": "Male",
+      "country": "India",
+      "state": "Punjab",
+      "city": "Jalandhar"
+     
+    },
+    {
+      "id": 3,
+      "firstName": "Harpreet",
+      "lastName": "Kaur",
+      "email": "harp@gmail.com",
+      "phoneNumber": "3456342789",
+      "qualification": ["10","12"],
+      "gender": "Female",
+      "country": "Canada",
+      "state": "Rajasthan",
+      "city": "Mohali"
+     
+    },
+    {
+      "id": 4,
+      "firstName": "Aman",
+      "lastName": "Singh",
+      "email": "aman23@gmail.com",
+      "phoneNumber": "7814153464",
+      "qualification": ["10","12","Bachelor","Master"],
+      "gender": "Male",
+      "country": "China",
+      "state": "Assam",
+      "city": "Rajpura"
+     
+    },
+    {
+      "id": 5,
+      "firstName": "Mohini",
+      "lastName": "Rawat",
+      "email": "mamta.dx@gmail.com",
+      "phoneNumber": "964671254",
+      "qualification": ["10","12"],
+      "gender": "Female",
+      "country": "Italy",
+      "state": "Goa",
+      "city": "Jalandhar"
+     
+    },
+    {
+      "id": 6,
+      "firstName": "Rahul",
+      "lastName": "Saroj",
+      "email": "rahul@gmail.com",
+      "phoneNumber": "8456782754",
+      "qualification": ["10","12","Bachelor"],
+      "gender": "Male",
+      "country": "India",
+      "state": "Punjab",
+      "city": "Chandigarh"
+     
+    }
+  ]
+}
