@@ -4,7 +4,7 @@ import AlertRegistration from "../AlertRegistration/AlertRegistration";
 import Style from "./RegistrationStyle.module.css";
 import LoginValidation from "../LoginValidation/LoginValidation";
 
-import CreateData from "../CreateData/CreateData";
+import FormTable from "../CrudData/FormTable";
 
 function HomePage() {
   const [active, IsActive] = useState(1);
@@ -77,7 +77,7 @@ function HomePage() {
 
         {active == 4 && (
           <>
-            <CreateData />
+            <FormTable />
           </>
         )}
       </div>

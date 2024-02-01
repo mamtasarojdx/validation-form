@@ -5,7 +5,10 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import AlertRegistration from "./Components/AlertRegistration/AlertRegistration";
 import LoginValidation from "./Components/LoginValidation/LoginValidation";
-import Register from "./Components/RegistrationForm/RegistrationForm";
+import FormTable from "./Components/CrudData/FormTable";
+import EditData from "./Components/CrudData/EditData";
+import CreateData from "./Components/CrudData/CreateData";
+
 
 function App() {
   return (
@@ -17,7 +20,9 @@ function App() {
           <Route exact path="/registration" element={<RegistrationFormData/>}></Route>
           <Route exact path="/alert" element={<AlertRegistration/>}></Route>
           <Route exact path="/login" element={<LoginValidation/>}></Route>
-          <Route exact path="/regis22" element={<Register/>}></Route>
+          <Route exact path="/form-table" element={<FormTable/>}></Route>
+          <Route exact path="edit/:id" element={<EditData/>}></Route>
+          <Route exact path="/create" element={<CreateData/>}></Route>
         </Routes>
       </BrowserRouter>
     </div>

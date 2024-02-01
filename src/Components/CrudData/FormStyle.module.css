@@ -28,3 +28,40 @@
     border-color: #cdc9c9;
   }
   
+
+  .userBtn {
+    background-color: #1997ca;
+    color: white;
+    border-style: none;
+    padding: 8px 10px;
+    border-radius: 5px;
+   
+    margin: 10px -270px 50px 0px;
+}
+
+.editBtn {
+  background-color: #a79f08;
+  color: white;
+  border-style: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+
+
+}
+
+.dltBtn {
+  
+  background-color: #dc3545 !important;
+  color: white;
+  border-style: none;
+  border-radius: 5px;
+  padding: 5px 10px !important;
+  margin-left: -32%;
+
+}
+
+.search1 {
+  border-radius: 10px;
+  border: 20px solid #1997ca;
+  height: 45.8vw;
+}

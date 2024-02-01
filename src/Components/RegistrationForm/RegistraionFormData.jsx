@@ -14,6 +14,7 @@ const location = useLocation();
   const handleReset = () => {
     navigate("/");
   };
+  
   return (
     <>
     <div  className="text-center">

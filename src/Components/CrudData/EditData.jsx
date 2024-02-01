@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Formik, useFormik } from "formik";
-import { SignupSchema } from "../../schemas";
-import { Country, State, City } from "country-state-city";
 
-import Select from "react-select";
+import Style from "./FormStyle.module.css";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
 
-import Style from "./JsonStyle.module.css";
-import { useNavigate } from "react-router-dom";
-
-const CreateData = () => {
+const EditData = () => {
   const initialValues = {
     firstName: "",
     lastName: "",
@@ -19,23 +15,12 @@ const CreateData = () => {
     country: "",
     state: "",
     city: "",
-    password: "",
-    confirmPassword: "",
   };
-  const [users, setUsers] = useState([]);
+
   const [values, setValues] = useState(initialValues);
   const [errors, setErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
   const navigate = useNavigate();
-
-
-  useEffect(() => {
-    fetch("/data.json")
-      .then((response) => response.json())
-      .then((data) => setUsers(data.users));
-  }, []);
-
-
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
 
@@ -63,9 +48,9 @@ const CreateData = () => {
       Object.keys(errors).forEach((key) => {
         errorMessage += `${errors[key]}\n`;
       });
-      alert(errorMessage);
+      // alert(errorMessage);
     } else {
-      navigate("/registration", { state: { formData: values } });
+      navigate("/form-table", { state: { formData: values } });
     }
   };
 
@@ -88,7 +73,6 @@ const CreateData = () => {
     } else if (values.firstName.length > 30) {
       errors.firstName = "First Name cannot exceed 30 characters!";
     }
-
 
     //  -----------------------------------lastName--------------------------------------------
     if (!values.lastName) {
@@ -146,37 +130,14 @@ const CreateData = () => {
       errors.city = "Please select a city!";
     }
 
-    //  ------------------------------------password------------------------------------------------
-    if (!values.password) {
-      errors.password = "Password is required!";
-    } else if (values.password.length < 6) {
-      errors.password = "Password must be more than 5 characters!";
-    } else if (values.password.length > 15) {
-      errors.password = "Password can not exceed more than 15 characters!";
-    } else if (!passwordRegExp.test(values.password)) {
-      errors.password = "Password must contain at least one uppercase, one lowercase, one number and a special character!";
-    }
-
-    //  -----------------------------------confirm password--------------------------------------------
-    if (!values.confirmPassword) {
-      errors.confirmPassword = "Confirm Password is required!";
-    } else if (values.confirmPassword !== values.password) {
-      errors.confirmPassword = "Password and Confirm Password should be the same";
-    }
     return errors;
   };
 
   return (
     <>
-      <h3 className="mb-4 text-uppercase text-center">Create Data</h3>
+      <h3 className="mb-4 text-uppercase text-center">Update the data</h3>
       <section classNameName=" bg-dark">
         <form onSubmit={handleSubmit}>
-        <ul>
-        {users.map((user) => (
-          // <li key={user.id}>
-          //   {user.name} - {user.email}
-          // </li>
-       
           <div className="container ">
             <div className={`row d-flex justify-content-center align-items-center  ${Style.formRow}`}>
               <div className="col">
@@ -184,10 +145,10 @@ const CreateData = () => {
                   <div className="row">
                     <div className={`col-lg-12 ${Style.validationCard}`}>
                       <div className="card-body p-md-2 text-black">
-                        <div className="row">
+                        <div className="row mt-4 ">
                           <div className="col-md-6 mb-1">
                             {/* -----------------------------------first name------------------------ */}
-                            <li className="form-outline">
+                            <div className="form-outline">
                               <label className="form-label fw-bold" for="form3Example1m">
                                 First Name
                               </label>
@@ -199,11 +160,12 @@ const CreateData = () => {
                                 onChange={handleChange}
                                 name="firstName"
                               />
-                            </li>
+                            </div>
+                            <p className="text-danger">{errors.firstName}</p>
                           </div>
 
                           {/* -----------------------------------last name------------------------ */}
-                          <li className="col-md-6 mb-1">
+                          <div className="col-md-6 mb-1">
                             <div className="form-outline">
                               <label className="form-label fw-bold" for="form3Example1n">
                                 Last Name
@@ -217,11 +179,12 @@ const CreateData = () => {
                                 name="lastName"
                               />
                             </div>
-                          </li>
+                            <p className="text-danger">{errors.lastName}</p>
+                          </div>
                         </div>
-                        <div className="row">
+                        <div className="row mt-4">
                           {/*--------------- ----------email--------------------------- */}
-                          <li className="col-md-6 mb-1">
+                          <div className="col-md-6 mb-1">
                             <div className="form-outline">
                               <label className="form-label fw-bold" for="form3Example1m1">
                                 E-mail
@@ -235,9 +198,10 @@ const CreateData = () => {
                                 name="email"
                               />
                             </div>
-                          </li>
+                            <p className="text-danger">{errors.email}</p>
+                          </div>
 
-                          <li className="col-md-6 mb-1">
+                          <div className="col-md-6 mb-1">
                             {/* -----------------------------------------phone no------------------------- */}
                             <div className="form-outline">
                               <label className="form-label fw-bold" for="form3Example1n1">
@@ -252,10 +216,11 @@ const CreateData = () => {
                                 onChange={handleChange}
                               />
                             </div>
-                          </li>
+                            <p className="text-danger">{errors.phoneNumber}</p>
+                          </div>
                         </div>
                         {/* -----------------------------------------qualification------------------------- */}
-                        <div className="row">
+                        <div className="row mt-4">
                           <div className="col-md-6  justify-content-start align-items-center ">
                             <h6 className="mb-0 me-4 fw-bold">Qualification: </h6>
 
@@ -314,6 +279,7 @@ const CreateData = () => {
                                 checked={values.qualification.includes("10")}
                               />
                             </div>
+                            <p className="text-danger">{errors.qualification}</p>
                           </div>
 
                           {/* -----------------------------------------gender------------------------- */}
@@ -364,63 +330,12 @@ const CreateData = () => {
                                 checked={values.gender === "other"}
                               />
                             </div>
+                            <p className="text-danger">{errors.gender}</p>
                           </div>
                         </div>
                         {/* -----------------------------------------country------------------------- */}
-                        <div className="col-md-6 mb-1">
-                          <label className="form-label fw-bold  " for="form3Example1n1">
-                            Country
-                          </label>{" "}
-                        </div>
 
-                        <div className="col-md-12 mb-1">
-                          <select className={`select ${Style.selectValue}`} name="country" onChange={handleChange}>
-                            <option>Select Your country</option>
-                            <option value="India">India</option>
-                            <option value="China">China</option>
-                            <option value="Italy">Italy</option>
-                            <option value="Japan">Japan</option>
-                            <option value="Canada">Canada</option>
-                          </select>
-                        </div>
-
-                        {/* -----------------------------------state------------------------ */}
-                        <div className="row">
-                          <div className="col-md-6 mb-1">
-                            <div className="form-outline">
-                              <label className="form-label fw-bold" for="form3Example1m">
-                                State
-                              </label>
-                              <input
-                                type="firstName"
-                                id="form3Example1m"
-                                className="form-control form-control-lg"
-                                value={values.state}
-                                onChange={handleChange}
-                                name="state"
-                              />
-                            </div>
-                          </div>
-                          {/* -----------------------------------city------------------------ */}
-                          <div className="col-md-6 mb-1">
-                            <div className="form-outline">
-                              <label className="form-label fw-bold" for="form3Example1n">
-                                City
-                              </label>
-                              <input
-                                type="text"
-                                id="form3Example1n"
-                                className="form-control form-control-lg"
-                                value={values.city}
-                                onChange={handleChange}
-                                name="city"
-                                autoComplete="off"
-                              />
-                            </div>
-                          </div>{" "}
-                        </div>
-
-                        <div className="row mb-2">
+                        <div className="row mb-5 mt-5">
                           <div className="col-md-4 mb-1">
                             <h6>Country</h6>
                             <select className={`select ${Style.selectValue2}`} name="country" onChange={handleChange}>
@@ -431,8 +346,10 @@ const CreateData = () => {
                               <option value="Japan">Japan</option>
                               <option value="Canada">Canada</option>
                             </select>
+                            <p className="text-danger">{errors.country}</p>
                           </div>
-
+                         
+                          {/* -----------------------------------state------------------------ */}
                           <div className="col-md-4 mb-1">
                             <h6>States</h6>
                             <select className={`select ${Style.selectValue3}`} name="state" onChange={handleChange}>
@@ -443,8 +360,10 @@ const CreateData = () => {
                               <option value="Goa">Goa</option>
                               <option value="Assam">Assam</option>
                             </select>
+                            <p className="text-danger">{errors.state}</p>
                           </div>
-
+                         
+                          {/* -----------------------------------City------------------------ */}
                           <div className="col-md-4 mb-1">
                             <h6>City</h6>
                             <select className={`select ${Style.selectValue4}`} name="city" onChange={handleChange}>
@@ -455,47 +374,14 @@ const CreateData = () => {
                               <option value="Jalandhar">Jalandhar</option>
                               <option value="Rajpura">Rajpura</option>
                             </select>
+                            <p className="text-danger">{errors.city}</p>
                           </div>
+                         
                         </div>
-                        {/* -----------------------------------------password------------------------- */}
-                        {/* <div className="row">
-                          <div className="col-md-6 mb-1">
-                            <div className="form-outline">
-                              <label className="form-label fw-bold " for="form3Example1m1">
-                                Password
-                              </label>
-                              <input
-                                type="password"
-                                id="form3Example1m1"
-                                className="form-control form-control-lg"
-                                value={values.password}
-                                onChange={handleChange}
-                                name="password"
-                                autoComplete="new-password"
-                              />{" "}
-                            </div>
-                          </div> */}
 
-                          {/* ----------------------------------------- confirm password------------------------- */}
-                          {/* <div className="col-md-6 mb-1">
-                            <div className="form-outline">
-                              <label className="form-label fw-bold" for="form3Example1n1">
-                                Confirm Password
-                              </label>
-                              <input
-                                type="password"
-                                id="form3Example1n1"
-                                className="form-control form-control-lg"
-                                value={values.confirmPassword}
-                                onChange={handleChange}
-                                name="confirmPassword"
-                              />
-                            </div>
-                          </div>
-                        </div> */}
                         <div className="d-flex justify-content-end pt-1 mt-2">
                           <button type="reset" className="btn btn-danger btn-lg " onClick={handleReset}>
-                            Update
+                            Reset
                           </button>
                           <button type="submit" className="btn btn-warning  text-white btn-lg ms-2">
                             Submit
@@ -507,11 +393,10 @@ const CreateData = () => {
                 </div>
               </div>
             </div>
-          </div> ))}
-      </ul>
+          </div>
         </form>
       </section>
     </>
   );
 };
-export default CreateData;
+export default EditData;
