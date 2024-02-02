@@ -56,7 +56,8 @@ const AlertRegistration = () => {
       });
       // alert(errorMessage);
     } else {
-      navigate("/form-table", { state: { formData: values } });
+      navigate("/form-table", { state: { items: values } });
+      
     }
   };
 

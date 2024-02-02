@@ -3,61 +3,33 @@ import { json, useLocation, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Style from "./FormStyle.module.css";
+import data from "../CrudData/Data.json";
 
 function FormTable() {
-  const [users, setUsers] = useState([]);
-
+  const [items, setItems] = useState([]);
   const navigate = useNavigate();
-
-  const initialValues = {
-    firstName: "",
-    lastName: "",
-    email: "",
-    phoneNumber: "",
-    qualification: [],
-    gender: "",
-    country: "",
-    state: "",
-    city: "",
-    password: "",
-    confirmPassword: "",
-  };
+  const [newItemName, setNewItemName] = useState("");
 
   useEffect(() => {
-    fetch("/data.json")
-      .then((response) => response.json())
-      .then((data) => setUsers(data.users));
-      localStorage.setItem('myData', JSON.stringify(json));
-      console.log(users);
-    }, []);
- 
+    setItems(data);
+  }, []);
 
-  const handleDelete = (id) => {
-    fetch(`/data.json/${id}`, {
-      method: "DELETE",
-    })
-      .then((response) => response.json())
-      .then((users) => {
-        setUsers(users.filter((user) => user.id !== id));
-      });
+  const deleteItem = (id) => {
+    const newItems = items.filter((item) => item.id !== id);
+    setItems(newItems);
   };
 
-  const handleCreate = () => {
-    const newUser = { id: users.length + 1, name: `Item ${users.length + 1}` };
-    setUsers([...users, newUser]);
-    setUsers([...users, newUser]);
+  const addItem = (newItem) => {
+    setItems([...items, newItem]);
+    // setNewItemName("");
     navigate("/create");
   };
-
-  const handleEdit = (id) => {
-    navigate(`/edit/${id}`);
-  };
-
+  
   return (
     <>
       <section className={`${Style.search1}`}>
         <div className="col-lg-4 col-md-4 col-sm-4 text-end">
-          <button type="button" className={`${Style.userBtn}`} onClick={handleCreate}>
+          <button type="button" className={`${Style.userBtn}`} onClick={addItem}>
             Create new User
           </button>
         </div>
@@ -78,25 +50,25 @@ function FormTable() {
               <tr></tr>
             </thead>
             <tbody>
-              {users.map((user) => (
-                <tr key={user.id}>
-                  <td>{user.firstName}</td>
-                  <td>{user.lastName}</td>
-                  <td>{user.email}</td>
-                  <td>{user.phoneNumber}</td>
-                  <td>{user.qualification ? user.qualification + " " : user.qualification}</td>
-                  <td>{user.gender}</td>
-                  <td>{user.country}</td>
-                  <td>{user.state}</td>
-                  <td>{user.city}</td>
+              {items.map((item) => (
+                <tr key={item.id}>
+                  <td>{item.firstName}</td>
+                  <td>{item.lastName}</td>
+                  <td>{item.email}</td>
+                  <td>{item.phoneNumber}</td>
+                  <td>{item.qualification ? item.qualification + " " : item.qualification}</td>
+                  <td>{item.gender}</td>
+                  <td>{item.country}</td>
+                  <td>{item.state}</td>
+                  <td>{item.city}</td>
                   <td>
-                    <button type="button" className={`${Style.editBtn}`} onClick={() => handleEdit(user.id)}>
+                    <button type="button" className={`${Style.editBtn}`} >
                       Edit
                     </button>
                   </td>
                   <td>
                     {" "}
-                    <button type="button" className={`${Style.dltBtn}`} onClick={() => handleDelete(user.id)}>
+                    <button type="button" className={`${Style.dltBtn}`}  onClick={() => deleteItem(item.id)}>
                       Delete
                     </button>
                   </td>
