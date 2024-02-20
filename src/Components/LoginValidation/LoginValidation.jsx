@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import Style from "./LoginStyle.module.css";
 import { useNavigate } from "react-router-dom";
+import LoginData from "./LoginData.json";
+import { ToastContainer, toast, Slide } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const LoginValidation = () => {
   const initialValues = {
@@ -14,6 +17,8 @@ const LoginValidation = () => {
   const [values, setValues] = useState(initialValues);
   const [errors, setErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -32,14 +37,33 @@ const LoginValidation = () => {
     setErrors(errors);
     setIsSubmit(true);
 
-    if (Object.keys(errors).length > 0) {
-      let errorMessage = "";
-      Object.keys(errors).forEach((key) => {
-        errorMessage += `${errors[key]}\n`;
-      });
-      //   alert(errorMessage);
-    } else {
-      navigate("/registration", { state: { formData: values } });
+    if (Object.keys(errors).length === 0) {
+      const user = LoginData.find((user) => user.email === values.email && user.password === values.password);
+      if (user) {
+        setLoading(true);
+        localStorage.setItem("loggedInUser", JSON.stringify(user));
+        localStorage.setItem("credentials", JSON.stringify(values));
+        if (values.rememberMe) {
+          localStorage.setItem("credentials", JSON.stringify({ email: values.email, password: values.password }));
+        }
+
+        setTimeout(() => {
+          toast.success("Login save successfully", {
+            position: "top-center",
+            autoClose: 1000,
+            transition: Slide,
+          });
+        }, 3000);
+        setTimeout(() => {
+          navigate("/login-data", { state: user });
+        }, 1000);
+      } else {
+        toast.error("Invalid email or password", {
+          position: "top-center",
+          transition: Slide,
+          autoClose: 1500,
+        });
+      }
     }
   };
 
@@ -76,6 +100,16 @@ const LoginValidation = () => {
 
     return errors;
   };
+
+  useEffect(() => {
+    const storedCredentials = localStorage.getItem("loggedInUser");
+    if (storedCredentials && !isSubmit) {
+      const { email, password } = JSON.parse(storedCredentials);
+      if (email && password) {
+        navigate("/login");
+      }
+    }
+  }, [navigate, isSubmit]);
 
   return (
     <>
@@ -155,6 +189,7 @@ const LoginValidation = () => {
             </div>
           </form>
         </section>
+        <ToastContainer />
       </div>
     </>
   );

@@ -14,6 +14,10 @@ function FormTable() {
     setItems(data);
   }, []);
 
+const editItem =(id)=>{
+  navigate("edit");
+}
+
   const deleteItem = (id) => {
     const newItems = items.filter((item) => item.id !== id);
     setItems(newItems);
@@ -50,7 +54,7 @@ function FormTable() {
               <tr></tr>
             </thead>
             <tbody>
-              {items.map((item) => (
+              {data.map((item) => (
                 <tr key={item.id}>
                   <td>{item.firstName}</td>
                   <td>{item.lastName}</td>
@@ -62,7 +66,7 @@ function FormTable() {
                   <td>{item.state}</td>
                   <td>{item.city}</td>
                   <td>
-                    <button type="button" className={`${Style.editBtn}`} >
+                    <button type="button" className={`${Style.editBtn}`} onClick={() => editItem(item.id)}>
                       Edit
                     </button>
                   </td>
