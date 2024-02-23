@@ -7,8 +7,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import LoginData from "./LoginData.json";
 import { useNavigate } from "react-router-dom";
 
-
-const LoginPage = () => {
+const LoginPage = ({ onLogin }) => {
   const navigate = useNavigate();
   const initialValues = {
     email: "",
@@ -21,33 +20,34 @@ const LoginPage = () => {
   const [isSubmit, setSubmit] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
- 
 
-  useEffect(() => {
-    const storedCredentials = localStorage.getItem("credentials");
-    if (storedCredentials) {
-      const { email, password, rememberMe } = JSON.parse(storedCredentials);
-      if (rememberMe) {
-        setValues({ email, password, rememberMe: true });
+  useEffect(()=>{
+    const storedCredentials=localStorage.getItem('credentials')
+    if(storedCredentials){
+      const{email,password,rememberMe}=JSON.parse(storedCredentials);
+      if(rememberMe){
+        setValues({email,password,rememberMe:true});
         setRememberMe(true);
-      } else {
-        setValues({ email: "", password: "" });
-        setRememberMe(false);
+      }else {
+        setValues({email:"",password:""});
+        setRememberMe(false)
       }
     }
-  }, []);
+
+  },[])
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
   const handleChange = (e) => {
-    const { name, value, checked } = e.target;
-    const newValue = name === "rememberMe" ? checked : value;
+    const { name, value,checked } = e.target;
+    const newValue =name === "rememberMe" ?checked:value;
     setValues({ ...values, [name]: newValue });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    onLogin(values.email, values.password);
     const errors = validate(values);
     setErrors(errors);
     setSubmit(true);
@@ -55,13 +55,12 @@ const LoginPage = () => {
     if (Object.keys(errors).length === 0) {
       const user = LoginData.find((user) => user.email === values.email && user.password === values.password);
       if (user) {
-       
         localStorage.setItem("loggedInUser", JSON.stringify(user));
         localStorage.setItem("credentials", JSON.stringify(values));
-        if (values.rememberMe) {
-          localStorage.setItem("credentials", JSON.stringify({ email: values.email, password: values.password, rememberMe: true }));
-        } else {
-          localStorage.removeItem("credentiala");
+        if(values.rememberMe){
+          localStorage.setItem('credentials',JSON.stringify({email:values.email,password:values.password,rememberMe:true}))
+        }else{
+          localStorage.removeItem('credentiala')
         }
 
         setTimeout(() => {
@@ -74,7 +73,9 @@ const LoginPage = () => {
         setTimeout(() => {
           navigate("/login-data", { state: user });
         }, 100);
-      } else {
+      } 
+      else {
+        setValues({ email: "", password: "", rememberMe: false }); 
         toast.error("Invalid email or password", {
           position: "top-center",
           transition: Slide,

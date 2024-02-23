@@ -12,27 +12,33 @@ import LoginFormData from "./Components/LoginValidation/LoginFormData";
 import LoginPage from "./Components/LoginValidation/LoginPage";
 import Protected from "./Components/LoginValidation/Protected";
 import PageNotFound from "./Components/LoginValidation/PageNotFound";
-
+import LoginTable from "./Components/LoginValidation/LoginTable";
+import { useState } from "react";
+import userData from "./Components/LoginValidation/LoginData.json";
+import CountTimer from "./Components/CountTimer";
 
 function App() {
+  const [loggedInUser, setLoggedInUser] = useState(null);
+
+  const handleLogin = (email, password) => {
+    const user = userData.find((user) => user.email === email);
+
+    if (user) {
+      setLoggedInUser(user);
+    }
+  };
+
   return (
-    <div>
-      <BrowserRouter>
-        <Routes>
-          <Route exact path="/" element={<Protected />}></Route>
-          <Route exact path="/inline" element={<Protected/>}></Route>
-          <Route exact path="/registration" element={<Protected/>}></Route>
-          <Route exact path="/alert" element={<Protected/>}></Route>
-          <Route exact path="/login" element={<Protected/>}></Route>
-          <Route exact path="/form-table" element={<Protected/>}></Route>
-          <Route exact path="/edit" element={<Protected/>}></Route>
-          <Route exact path="/create" element={<Protected/>}></Route>
-          <Route exact path="/login-data" element={<Protected/>}></Route>
-          <Route exact path="/login-page" element={<LoginPage/>}></Route>
-          <Route path="*" exact element={<PageNotFound/>} />
-        </Routes>
-      </BrowserRouter>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route exact path="/" element={<Protected />} />
+        <Route exact path="/login-data" element={<Protected />} />
+        <Route exact path="/count-timer" element={<CountTimer />} />
+        <Route exact path="/login-page" element={<LoginPage onLogin={handleLogin} />} />
+        <Route exact path="/login-table" element={<LoginTable loggedInUser={loggedInUser} />} />
+        <Route path="*" exact element={<PageNotFound />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

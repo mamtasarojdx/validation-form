@@ -58,7 +58,7 @@
 
 .imgRadius {
   border-radius: 5px;
-
+  margin-top: -30%;
   width: 80%;
 }
 
@@ -257,4 +257,62 @@ h6 {
 }
 .cardImg {
   width: 89.2%;
+}
+.cardName {
+  margin-top: -5%;
+}
+.tableBtn {
+  color: #072cf0;
+  font-weight: bolder;
+}
+.timerText {
+  font-weight: bolder;
+  margin-top: 20px;
+}
+Input[type="text"] {
+  border-style: none;
+
+  /* margin-left: -13%; */
+  padding: 0 0 0 14px;
+  border-style: none;
+  color: black;
+  /* width: 20%; */
+}
+Input[type="number"]:focus {
+  border-style: none;
+  outline: none;
+}
+
+.firstText {
+  border-style: none;
+  color: black;
+}
+
+.hr1 {
+  width: 575px;
+  height: 1px;
+  flex-shrink: 0;
+  background: #d9d9d9;
+}
+
+.timerStart {
+  border-style: none;
+  background-color: #57af57;
+  color: white;
+  margin-top: 15px;
+  border-radius: 4px;
+}
+.timerStop {
+  border-style: none;
+  background-color: #5b83a3;
+  color: white;
+  margin-top: 10px;
+  border-radius: 4px;
+}
+.timerReset {
+  border-style: none;
+  background-color: #e8a84b;
+  color: white;
+  margin-left: 10px;
+  border-radius: 4px;
 }
