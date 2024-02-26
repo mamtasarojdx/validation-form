@@ -1,7 +1,4 @@
 import { useState, useEffect } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-// import Style from "./LoginDataStyle.module.css";
 
 const CountTimer = () => {
   const [limitInput, setLimitInput] = useState("");
@@ -16,21 +13,16 @@ const CountTimer = () => {
 
   const handleLimitSubmit = () => {
     const newLimit = parseInt(limitInput, 10);
-    if (!isNaN(newLimit) && newLimit > 0) {
+    if (!isNaN(newLimit) && newLimit >= 0) {
       setLimit(newLimit);
       setTimerRunning(true);
       setTimerCompleted(false);
-    } else {
-      toast.error("Please enter a valid positive number for the timer limit.", {
-        position: "top-center",
-        autoClose: 1500,
-      });
+      setTime(newLimit);
     }
   };
 
   const handleStopTimer = () => {
     setTimerRunning(false);
-    setLimitInput(`${String(Math.floor(time / 60)).padStart(2, "0")}:${String(time % 60).padStart(2, "0")}`);
   };
 
   const resetTimer = () => {
@@ -42,72 +34,72 @@ const CountTimer = () => {
   };
 
   const handleTimerCompletion = () => {
-    if (time >= limit) {
-      resetTimer();
+    setTimeout(() => {
       setTimerCompleted(true);
-      toast.success("Timer completed! Click OK to reset.", {
-        position: "top-center",
-        onClose: () => setTimerRunning(false),
-      });
-    }
+
+      resetTimer();
+      setTimerRunning(false);
+      setLimitInput("");
+    }, 1000);
   };
 
   useEffect(() => {
     let interval;
 
-    if (isTimerRunning && time < limit) {
+    if (isTimerRunning && time > 0) {
       interval = setInterval(() => {
-        setTime((prevTime) => prevTime + 1);
+        setTime((prevTime) => prevTime - 1);
 
-        if (time === limit) {
+        if (time - 1 === 0) {
+          clearInterval(interval);
           handleTimerCompletion();
         }
       }, 1000);
-    } else if (time >= limit) {
+    } else if (time === 0) {
       clearInterval(interval);
+      handleTimerCompletion();
     }
+
     return () => clearInterval(interval);
-  }, [isTimerRunning, time, limit]);
+  }, [isTimerRunning, time]);
 
   return (
-    <div>
-      <p>Please enter the specific time:</p>
-
-      {isTimerRunning ? (
-        !timerCompleted && time === limit ? (
-          <>
-            <input type="text" value={limitInput}  />
-          </>
-        ) : (
-          <>
-            {String(Math.floor(time / 60)).padStart(2, "0")}:{String(time % 60).padStart(2, "0")}
-          </>
-        )
-      ) : (
-        <>
-          {" "}
-          <input type="number" value={limitInput} onChange={handleLimitInputChange} />
-        </>
-      )}
-
+    <>
       <div>
-        {isTimerRunning ? (
-          <>
-          <button onClick={handleStopTimer}>Pause</button>
-         
-          </>
+        <h5>Countdown Timer:</h5>
+
+        {limit ? (
+          !timerCompleted ? (
+            <>
+              {String(Math.floor(time / 60)).padStart(2, "0")}:{String(time % 60).padStart(2, "0")}
+            </>
+          ) : (
+            <>
+              <input type="number" value={limitInput} onChange={handleLimitInputChange} />
+            </>
+          )
         ) : (
           <>
-            {" "}
-            <button onClick={handleLimitSubmit}>Play</button>
+            <input type="number" value={limitInput} onChange={handleLimitInputChange} />
           </>
         )}
+
+        <div>
+          {isTimerRunning ? (
+            <>
+              <button onClick={handleStopTimer}>Pause</button>
+              <button onClick={resetTimer}>Reset</button>
+            </>
+          ) : (
+            <>
+              <button onClick={handleLimitSubmit}>Play</button>
+              <button onClick={resetTimer}>Reset</button>
+            </>
+          )}
+        </div>
       </div>
-      <div>
-        <button onClick={resetTimer}>Reset</button>
-        <ToastContainer />
-      </div>
-    </div>
+    </>
   );
 };
+
 export default CountTimer;

@@ -43,7 +43,7 @@ function LoginFormData() {
   };
 
   const resetTimer = () => {
-    setLimitInput("");
+    setLimitInput();
     setLimit(null);
     setTime(0);
     setTimerRunning(false);
@@ -51,15 +51,13 @@ function LoginFormData() {
   };
 
   const handleTimerCompletion = () => {
-    if (time >= limit) {
-      setLimitInput(`${String(Math.floor(time / 60)).padStart(2, "0")}:${String(time % 60).padStart(2, "0")}`);
+    setTimerCompleted(true);
+
+    setTimeout(() => {
       resetTimer();
-      setTimerCompleted(true);
-      toast.success("Timer completed! Click OK to reset.", {
-        position: "top-center",
-        onClose: () => setTimerRunning(false),
-      });
-    }
+      setTimerRunning(false);
+      setLimitInput("");
+    }, 1000);
   };
 
   useEffect(() => {
@@ -69,15 +67,19 @@ function LoginFormData() {
       interval = setInterval(() => {
         setTime((prevTime) => prevTime + 1);
 
-        if (time === limit) {
+        if (time + 1 === limit) {
+          clearInterval(interval);
           handleTimerCompletion();
         }
       }, 1000);
-    } else if (time >= limit) {
+    } else if (time === limit) {
       clearInterval(interval);
+      handleTimerCompletion();
     }
+
     return () => clearInterval(interval);
   }, [isTimerRunning, time, limit]);
+
 
   const fetchUserListFromServer = () => {
     return [...UserData];
@@ -163,7 +165,7 @@ function LoginFormData() {
                         {limit ? (
                           !timerCompleted && time === limit ? (
                             <>
-                               <input type="number"  value={limitInput} onChange={handleLimitInputChange} className={`${Style.timerInput}`} />
+                              <input type="number" value={limitInput} onChange={handleLimitInputChange} className={`${Style.timerInput}`} />
                             </>
                           ) : (
                             <>
@@ -177,6 +179,8 @@ function LoginFormData() {
                           </>
                         )}
 
+
+                         
                         <div>
                           {/* {isTimerRunning ? (
                             <>
@@ -192,7 +196,6 @@ function LoginFormData() {
                               </button>
                             </>
                           )} */}
-                          
 
                           {isTimerRunning ? (
                             <>
@@ -200,8 +203,8 @@ function LoginFormData() {
                                 Pause
                               </button>
                               <button onClick={resetTimer} className={`${Style.timerReset}`}>
-                            Reset
-                          </button>
+                                Reset
+                              </button>
                             </>
                           ) : (
                             <>
@@ -210,8 +213,8 @@ function LoginFormData() {
                                 Play
                               </button>
                               <button onClick={resetTimer} className={`${Style.timerReset}`}>
-                            Reset
-                          </button>
+                                Reset
+                              </button>
                             </>
                           )}
                           <ToastContainer />
