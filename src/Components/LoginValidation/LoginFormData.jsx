@@ -12,6 +12,7 @@ function LoginFormData() {
     password: "",
     rememberMe: false,
   };
+  const [active, IsActive] = useState(1);
   const [limitInput, setLimitInput] = useState("");
   const [limit, setLimit] = useState(null);
   const [time, setTime] = useState(0);
@@ -148,7 +149,19 @@ function LoginFormData() {
                           Go To User List
                         </Link>
                       </div>
-                      <div>
+                      <div className={`${Style.tabSpan}`}>
+        <span onClick={() => IsActive(1)} style={active === 1 ? { color: "black" } : { color: "white" }}   >
+          Count Up
+        </span>
+        <span onClick={() => IsActive(2)} style={active === 2 ? { color: "black",marginLeft:"10px" } : { color: "white",marginLeft:"10px" }}   >
+              Count Down
+        </span>
+      
+      </div>
+      <div >
+        {active == 1 && (
+          <>
+             <div>
                         <p className={` ${Style.timerText}`}>Please enter the specific time:</p>
 
                         {/* {limit ? (
@@ -220,6 +233,89 @@ function LoginFormData() {
                           <ToastContainer />
                         </div>
                       </div>
+          </>
+        )}
+
+        {active == 2 && (
+          <>
+              <div>
+                        <p className={` ${Style.timerText}`}>Please enter the specific time:</p>
+
+                        {/* {limit ? (
+                          <>
+                            {String(Math.floor(time / 60)).padStart(2, "0")}:{String(time % 60).padStart(2, "0")}
+                          </>
+                        ) : (
+                          <>
+                            {isTimerRunning && time===limit ? (""):(<> <input type="number" value={limitInput} onChange={handleLimitInputChange} className={`${Style.timerInput}`} /></>)}
+                           
+                          </>
+                        )} */}
+
+                        {limit ? (
+                          !timerCompleted && time === limit ? (
+                            <>
+                              <input type="number" value={limitInput} onChange={handleLimitInputChange} className={`${Style.timerInput}`} />
+                            </>
+                          ) : (
+                            <>
+                              {String(Math.floor(time / 60)).padStart(2, "0")}:{String(time % 60).padStart(2, "0")}
+                            </>
+                          )
+                        ) : (
+                          <>
+                            {" "}
+                            <input type="number" value={limitInput} onChange={handleLimitInputChange} className={`${Style.timerInput}`} />
+                          </>
+                        )}
+
+
+                         
+                        <div>
+                          {/* {isTimerRunning ? (
+                            <>
+                              <button onClick={handleStopTimer} className={`${Style.timerStop}`}>
+                                Pause
+                              </button>
+                            </>
+                          ) : (
+                            <>
+                              {" "}
+                              <button onClick={handleLimitSubmit} className={`${Style.timerStart}`}>
+                                Play
+                              </button>
+                            </>
+                          )} */}
+
+                          {isTimerRunning ? (
+                            <>
+                              <button onClick={handleStopTimer} className={`${Style.timerStop}`}>
+                                Pause
+                              </button>
+                              <button onClick={resetTimer} className={`${Style.timerReset}`}>
+                                Reset
+                              </button>
+                            </>
+                          ) : (
+                            <>
+                              {" "}
+                              <button onClick={handleLimitSubmit} className={`${Style.timerStart}`}>
+                                Play
+                              </button>
+                              <button onClick={resetTimer} className={`${Style.timerReset}`}>
+                                Reset
+                              </button>
+                            </>
+                          )}
+                          <ToastContainer />
+                        </div>
+                      </div>
+          </>
+        )}
+
+       
+      </div>
+                    
                     </div>
                   </div>
                   <div class={`col-sm-7 ${Style.cardContent}`}>

@@ -34,6 +34,7 @@ const CountTimer = () => {
   };
 
   const handleTimerCompletion = () => {
+    
     setTimeout(() => {
       setTimerCompleted(true);
 
@@ -43,6 +44,8 @@ const CountTimer = () => {
     }, 1000);
   };
 
+
+  
   useEffect(() => {
     let interval;
 
@@ -62,6 +65,29 @@ const CountTimer = () => {
 
     return () => clearInterval(interval);
   }, [isTimerRunning, time]);
+
+  // useEffect(() => {
+  //   let interval;
+
+  //   if (isTimerRunning && time < limit) {
+  //     interval = setInterval(() => {
+  //       setTime((prevTime) => prevTime + 1);
+
+  //       if (time + 1 === limit) {
+  //         clearInterval(interval);
+  //         handleTimerCompletion();
+  //       }
+  //     }, 1000);
+  //   } else if (time === limit) {
+  //     clearInterval(interval);
+  //     handleTimerCompletion();
+  //   }
+
+  //   return () => clearInterval(interval);
+  // }, [isTimerRunning, time, limit]);
+
+
+
 
   return (
     <>

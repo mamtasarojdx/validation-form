@@ -263,11 +263,12 @@ h6 {
 }
 .tableBtn {
   color: #072cf0;
+ 
   font-weight: bolder;
 }
 .timerText {
   font-weight: bolder;
-  margin-top: 20px;
+  /* margin-top: 20px; */
 }
 Input[type="text"] {
   border-style: none;
@@ -315,4 +316,7 @@ Input[type="number"]:focus {
   color: white;
   margin-left: 10px;
   border-radius: 4px;
+}
+.tabSpan{
+  margin-top: 8px;
 }
