@@ -268,18 +268,10 @@ h6 {
 }
 .timerText {
   font-weight: bolder;
-  /* margin-top: 20px; */
+ 
 }
-Input[type="text"] {
-  border-style: none;
 
-  /* margin-left: -13%; */
-  padding: 0 0 0 14px;
-  border-style: none;
-  color: black;
-  /* width: 20%; */
-}
-Input[type="number"]:focus {
+Input[type="text"]:focus {
   border-style: none;
   outline: none;
 }
@@ -319,4 +311,16 @@ Input[type="number"]:focus {
 }
 .tabSpan{
   margin-top: 8px;
+}
+.timerButton:focus {
+  border-style: none;
+  outline: none;
+}
+.timerButton{
+  border-style: none;
+  outline: none;
+  /* background-color: #8585e9;
+  color: white; */
+  margin: 20px 0 10px 0;
+  /* border-radius: 5px; */
 }

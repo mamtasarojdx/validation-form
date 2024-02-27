@@ -1,12 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
-const CountTimer = () => {
+function CountTimer() {
   const [limitInput, setLimitInput] = useState("");
   const [limit, setLimit] = useState(null);
-  const [time, setTime] = useState(0);
+  const [timer, setTimer] = useState(0);
   const [isTimerRunning, setTimerRunning] = useState(false);
   const [timerCompleted, setTimerCompleted] = useState(false);
-
+  const [isCountUp, setCountUp] = useState(true);
+  const [lastPausedTime, setLastPausedTime] = useState(0);
+  
+  
   const handleLimitInputChange = (event) => {
     setLimitInput(event.target.value);
   };
@@ -15,98 +18,77 @@ const CountTimer = () => {
     const newLimit = parseInt(limitInput, 10);
     if (!isNaN(newLimit) && newLimit >= 0) {
       setLimit(newLimit);
-      setTimerRunning(true);
+      setTimer(isCountUp ? 0 : newLimit);
       setTimerCompleted(false);
-      setTime(newLimit);
+      setTimerRunning(true);
+      setLastPausedTime(0); // Reset the last paused time
     }
   };
-
   const handleStopTimer = () => {
+    setLastPausedTime(timer); // Store the last paused time
     setTimerRunning(false);
   };
 
   const resetTimer = () => {
     setLimitInput("");
     setLimit(null);
-    setTime(0);
-    setTimerRunning(false);
+    setTimer(0);
     setTimerCompleted(false);
+    setTimerRunning(false);
   };
 
   const handleTimerCompletion = () => {
-    
-    setTimeout(() => {
-      setTimerCompleted(true);
-
-      resetTimer();
-      setTimerRunning(false);
-      setLimitInput("");
-    }, 1000);
+    resetTimer();
+    setTimerCompleted(true);
   };
 
-
-  
+  const toggleCountType = () => {
+    if (!isTimerRunning) {
+      setCountUp((prevCountUp) => !prevCountUp);
+      resetTimer();
+    }
+  };
   useEffect(() => {
-    let interval;
+    let intervalId;
 
-    if (isTimerRunning && time > 0) {
-      interval = setInterval(() => {
-        setTime((prevTime) => prevTime - 1);
+    if (isTimerRunning) {
+      intervalId = setInterval(() => {
+        setTimer((prevTimer) => {
+          const updatedTimer = isCountUp ? prevTimer + 1 : prevTimer - 1;
 
-        if (time - 1 === 0) {
-          clearInterval(interval);
-          handleTimerCompletion();
-        }
+          if ((isCountUp && updatedTimer === limit) || (!isCountUp && updatedTimer === 0)) {
+            clearInterval(intervalId);
+
+            // Delay the auto-reset by 1 second
+            setTimeout(() => {
+              handleTimerCompletion();
+            }, 1000);
+          }
+
+          return updatedTimer;
+        });
       }, 1000);
-    } else if (time === 0) {
-      clearInterval(interval);
-      handleTimerCompletion();
     }
 
-    return () => clearInterval(interval);
-  }, [isTimerRunning, time]);
-
-  // useEffect(() => {
-  //   let interval;
-
-  //   if (isTimerRunning && time < limit) {
-  //     interval = setInterval(() => {
-  //       setTime((prevTime) => prevTime + 1);
-
-  //       if (time + 1 === limit) {
-  //         clearInterval(interval);
-  //         handleTimerCompletion();
-  //       }
-  //     }, 1000);
-  //   } else if (time === limit) {
-  //     clearInterval(interval);
-  //     handleTimerCompletion();
-  //   }
-
-  //   return () => clearInterval(interval);
-  // }, [isTimerRunning, time, limit]);
-
-
-
-
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [isTimerRunning, limit, isCountUp]);
   return (
     <>
       <div>
-        <h5>Countdown Timer:</h5>
-
+        <div onClick={toggleCountType}>{isCountUp ? "Count UP Timer" : "Count Down Timer"}</div>
         {limit ? (
           !timerCompleted ? (
             <>
-              {String(Math.floor(time / 60)).padStart(2, "0")}:{String(time % 60).padStart(2, "0")}
+           {String(Math.floor(timer / 60)).padStart(2, "0")}:{String(timer % 60).padStart(2, "0")}
             </>
           ) : (
-            <>
-              <input type="number" value={limitInput} onChange={handleLimitInputChange} />
-            </>
+            <>Timer completed</>
           )
         ) : (
           <>
-            <input type="number" value={limitInput} onChange={handleLimitInputChange} />
+            <input type="text" value={limitInput} onChange={handleLimitInputChange} />
           </>
         )}
 
@@ -126,6 +108,6 @@ const CountTimer = () => {
       </div>
     </>
   );
-};
+}
 
 export default CountTimer;

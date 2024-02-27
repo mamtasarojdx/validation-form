@@ -2,7 +2,7 @@
     {
         "id": 1,
         "title": "Designer",
-        "img": "card-img.jpg",
+        "img": "card-img2.jpg",
         "name": "Mamta Saroj",
         "email": "mamta.dx@gmail.com",
         "phoneNumber": "8288832754",
@@ -37,7 +37,7 @@
     },
     {
         "id": 3,
-        "img": "card-img5.png",
+        "img": "card-img.png",
         "title": "Mobile Developer",
         "name": "Harpreet Kaur",
         "email": "harp@gmail.com",
@@ -74,7 +74,7 @@
     {
         "id": 5,
         "title": "Android Developer",
-        "img": "card-img2.jpg",
+        "img": "card-img5.jpg",
         "name": "Mohini Rawat",
         "email": "mohini.dx@gmail.com",
         "phoneNumber": "964671254",
