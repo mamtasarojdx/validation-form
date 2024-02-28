@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { ToastContainer, toast } from "react-toastify";
 
 function CountTimer() {
   const [limitInput, setLimitInput] = useState("");
@@ -8,24 +9,30 @@ function CountTimer() {
   const [timerCompleted, setTimerCompleted] = useState(false);
   const [isCountUp, setCountUp] = useState(true);
   const [lastPausedTime, setLastPausedTime] = useState(0);
-  
-  
+
   const handleLimitInputChange = (event) => {
     setLimitInput(event.target.value);
   };
 
   const handleLimitSubmit = () => {
     const newLimit = parseInt(limitInput, 10);
-    if (!isNaN(newLimit) && newLimit >= 0) {
+    if (limitInput.trim() === "") {
+      toast.error("Please enter a specific value");
+      return;
+    }
+    if (!isNaN(newLimit) && newLimit > 0) {
       setLimit(newLimit);
-      setTimer(isCountUp ? 0 : newLimit);
+      setTimer(lastPausedTime || (isCountUp ? 0 : newLimit));
       setTimerCompleted(false);
       setTimerRunning(true);
-      setLastPausedTime(0); // Reset the last paused time
+      setLastPausedTime(0);
+    } else {
+      toast.error("Please enter a positive number");
     }
   };
+
   const handleStopTimer = () => {
-    setLastPausedTime(timer); // Store the last paused time
+    setLastPausedTime(timer);
     setTimerRunning(false);
   };
 
@@ -35,6 +42,7 @@ function CountTimer() {
     setTimer(0);
     setTimerCompleted(false);
     setTimerRunning(false);
+    setLastPausedTime(0); 
   };
 
   const handleTimerCompletion = () => {
@@ -48,6 +56,7 @@ function CountTimer() {
       resetTimer();
     }
   };
+
   useEffect(() => {
     let intervalId;
 
@@ -59,7 +68,6 @@ function CountTimer() {
           if ((isCountUp && updatedTimer === limit) || (!isCountUp && updatedTimer === 0)) {
             clearInterval(intervalId);
 
-            // Delay the auto-reset by 1 second
             setTimeout(() => {
               handleTimerCompletion();
             }, 1000);
@@ -74,6 +82,8 @@ function CountTimer() {
       clearInterval(intervalId);
     };
   }, [isTimerRunning, limit, isCountUp]);
+
+
   return (
     <>
       <div>
@@ -81,7 +91,7 @@ function CountTimer() {
         {limit ? (
           !timerCompleted ? (
             <>
-           {String(Math.floor(timer / 60)).padStart(2, "0")}:{String(timer % 60).padStart(2, "0")}
+              {String(Math.floor(timer / 60)).padStart(2, "0")}:{String(timer % 60).padStart(2, "0")}
             </>
           ) : (
             <>Timer completed</>
@@ -106,6 +116,7 @@ function CountTimer() {
           )}
         </div>
       </div>
+      <ToastContainer />
     </>
   );
 }

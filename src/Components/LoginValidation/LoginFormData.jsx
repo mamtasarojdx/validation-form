@@ -22,24 +22,30 @@ function LoginFormData() {
   const [timerCompleted, setTimerCompleted] = useState(false);
   const [isCountUp, setCountUp] = useState(true);
   const [lastPausedTime, setLastPausedTime] = useState(0);
-
+console.log(lastPausedTime);
   const handleLimitInputChange = (event) => {
     setLimitInput(event.target.value);
   };
 
   const handleLimitSubmit = () => {
     const newLimit = parseInt(limitInput, 10);
-    if (!isNaN(newLimit) && newLimit >= 0) {
+    if (limitInput.trim() === "") {
+      toast.error("Please enter a specific value");
+      return;
+    }
+    if (!isNaN(newLimit) && newLimit > 0) {
       setLimit(newLimit);
-      setTimer(isCountUp ? 0 : newLimit);
+      setTimer(lastPausedTime || (isCountUp ? 0 : newLimit));
       setTimerCompleted(false);
       setTimerRunning(true);
-      setLastPausedTime(0); 
+      setLastPausedTime(0);
+    } else {
+      toast.error("Please enter a positive number");
     }
   };
 
   const handleStopTimer = () => {
-    setLastPausedTime(timer); 
+    setLastPausedTime(timer);
     setTimerRunning(false);
   };
 
@@ -49,6 +55,7 @@ function LoginFormData() {
     setTimer(0);
     setTimerCompleted(false);
     setTimerRunning(false);
+    setLastPausedTime(0); 
   };
 
   const handleTimerCompletion = () => {
@@ -62,28 +69,28 @@ function LoginFormData() {
       resetTimer();
     }
   };
+
   useEffect(() => {
     let intervalId;
-  
+
     if (isTimerRunning) {
       intervalId = setInterval(() => {
         setTimer((prevTimer) => {
           const updatedTimer = isCountUp ? prevTimer + 1 : prevTimer - 1;
-  
+
           if ((isCountUp && updatedTimer === limit) || (!isCountUp && updatedTimer === 0)) {
             clearInterval(intervalId);
-  
-           
+
             setTimeout(() => {
               handleTimerCompletion();
             }, 1000);
           }
-  
+
           return updatedTimer;
         });
       }, 1000);
     }
-  
+
     return () => {
       clearInterval(intervalId);
     };
@@ -105,6 +112,7 @@ function LoginFormData() {
       });
     }
   }, [loggedInUser, navigate]);
+
 
   const removeUserByEmail = (email) => {
     const updatedUserList = userList?.filter((u) => u.email !== email);
@@ -158,10 +166,10 @@ function LoginFormData() {
                       </div>
 
                       <div>
-                        <div onClick={toggleCountType} className={`${Style.timerButton}`}>
+                        <button onClick={toggleCountType} className={`${Style.timerButton}`}>
                           {isCountUp ? "Count UP Timer" : "Count Down Timer"}
-                        </div>
-                        {limit ? (
+                        </button> 
+                       <div> {limit ? (
                           !timerCompleted ? (
                             <>
                               {/* {String(Math.floor(timer / 60)).padStart(2, "0")}:{String(timer % 60).padStart(2, "0")} */}
@@ -172,9 +180,9 @@ function LoginFormData() {
                           )
                         ) : (
                           <>
-                            <input type="text" placeholder="Enter the Seconds" value={limitInput} onChange={handleLimitInputChange} />
+                            <input type="number" placeholder="Enter the Seconds" value={limitInput} onChange={handleLimitInputChange} />
                           </>
-                        )}
+                        )}</div>
 
                         <div>
                           {isTimerRunning ? (

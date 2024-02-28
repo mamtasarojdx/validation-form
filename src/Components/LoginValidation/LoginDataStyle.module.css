@@ -271,7 +271,7 @@ h6 {
  
 }
 
-Input[type="text"]:focus {
+Input[type="number"]:focus {
   border-style: none;
   outline: none;
 }
@@ -319,8 +319,9 @@ Input[type="text"]:focus {
 .timerButton{
   border-style: none;
   outline: none;
-  /* background-color: #8585e9;
-  color: white; */
+  background-color: #5b83a3;
+  color: white;
   margin: 20px 0 10px 0;
-  /* border-radius: 5px; */
+  border-radius: 4px;
+  padding: 0px 10px 1px 10px;
 }
