@@ -59,7 +59,7 @@ console.log(lastPausedTime);
   };
 
   const handleTimerCompletion = () => {
-    resetTimer();
+    // resetTimer();
     setTimerCompleted(true);
   };
 
@@ -80,9 +80,10 @@ console.log(lastPausedTime);
 
           if ((isCountUp && updatedTimer === limit) || (!isCountUp && updatedTimer === 0)) {
             clearInterval(intervalId);
-
+           
             setTimeout(() => {
               handleTimerCompletion();
+              
             }, 1000);
           }
 
@@ -93,8 +94,11 @@ console.log(lastPausedTime);
 
     return () => {
       clearInterval(intervalId);
+      if (timerCompleted) {
+        resetTimer();
+      }
     };
-  }, [isTimerRunning, limit, isCountUp]);
+  }, [isTimerRunning, limit, isCountUp, timerCompleted]);
 
   const fetchUserListFromServer = () => {
     return [...UserData];
@@ -176,7 +180,7 @@ console.log(lastPausedTime);
                               00:{String(timer).padStart(2, "0")}
                             </>
                           ) : (
-                            <>Timer completed</>
+                            <> 00:{String(timer).padStart(2, "0")}</>
                           )
                         ) : (
                           <>

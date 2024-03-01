@@ -42,12 +42,12 @@ function CountTimer() {
     setTimer(0);
     setTimerCompleted(false);
     setTimerRunning(false);
-    setLastPausedTime(0); 
+    setLastPausedTime(0);
   };
 
   const handleTimerCompletion = () => {
-    resetTimer();
     setTimerCompleted(true);
+    // resetTimer()
   };
 
   const toggleCountType = () => {
@@ -80,9 +80,11 @@ function CountTimer() {
 
     return () => {
       clearInterval(intervalId);
+      if (timerCompleted) {
+        resetTimer();
+      }
     };
-  }, [isTimerRunning, limit, isCountUp]);
-
+  }, [isTimerRunning, limit, isCountUp, timerCompleted]);
 
   return (
     <>
@@ -94,7 +96,9 @@ function CountTimer() {
               {String(Math.floor(timer / 60)).padStart(2, "0")}:{String(timer % 60).padStart(2, "0")}
             </>
           ) : (
-            <>Timer completed</>
+            <>
+              {String(Math.floor(timer / 60)).padStart(2, "0")}:{String(timer % 60).padStart(2, "0")}
+            </>
           )
         ) : (
           <>
