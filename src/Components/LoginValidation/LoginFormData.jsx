@@ -21,8 +21,8 @@ function LoginFormData() {
   const [isTimerRunning, setTimerRunning] = useState(false);
   const [timerCompleted, setTimerCompleted] = useState(false);
   const [isCountUp, setCountUp] = useState(true);
-  const [lastPausedTime, setLastPausedTime] = useState(0);
-console.log(lastPausedTime);
+  const [lastPausedTime, setLastPausedTime] = useState(false);
+
   const handleLimitInputChange = (event) => {
     setLimitInput(event.target.value);
   };
@@ -38,7 +38,7 @@ console.log(lastPausedTime);
       setTimer(lastPausedTime || (isCountUp ? 0 : newLimit));
       setTimerCompleted(false);
       setTimerRunning(true);
-      setLastPausedTime(0);
+      setLastPausedTime(false);
     } else {
       toast.error("Please enter a positive number");
     }
@@ -55,12 +55,13 @@ console.log(lastPausedTime);
     setTimer(0);
     setTimerCompleted(false);
     setTimerRunning(false);
-    setLastPausedTime(0); 
+    setLastPausedTime(false);
   };
 
   const handleTimerCompletion = () => {
-    // resetTimer();
     setTimerCompleted(true);
+    setTimer(isCountUp ? limit : 0);
+    setTimerRunning(false);
   };
 
   const toggleCountType = () => {
@@ -78,15 +79,13 @@ console.log(lastPausedTime);
         setTimer((prevTimer) => {
           const updatedTimer = isCountUp ? prevTimer + 1 : prevTimer - 1;
 
-          if ((isCountUp && updatedTimer === limit) || (!isCountUp && updatedTimer === 0)) {
+          if ((isCountUp && updatedTimer >= limit) || (!isCountUp && updatedTimer <= 0)) {
             clearInterval(intervalId);
-           
+
             setTimeout(() => {
               handleTimerCompletion();
-              
             }, 1000);
           }
-
           return updatedTimer;
         });
       }, 1000);
@@ -116,7 +115,6 @@ console.log(lastPausedTime);
       });
     }
   }, [loggedInUser, navigate]);
-
 
   const removeUserByEmail = (email) => {
     const updatedUserList = userList?.filter((u) => u.email !== email);
@@ -172,21 +170,24 @@ console.log(lastPausedTime);
                       <div>
                         <button onClick={toggleCountType} className={`${Style.timerButton}`}>
                           {isCountUp ? "Count UP Timer" : "Count Down Timer"}
-                        </button> 
-                       <div> {limit ? (
-                          !timerCompleted ? (
-                            <>
-                              {/* {String(Math.floor(timer / 60)).padStart(2, "0")}:{String(timer % 60).padStart(2, "0")} */}
-                              00:{String(timer).padStart(2, "0")}
-                            </>
+                        </button>
+                        <div>
+                          {" "}
+                          {limit ? (
+                            !timerCompleted ? (
+                              <>
+                                {/* {String(Math.floor(timer / 60)).padStart(2, "0")}:{String(timer % 60).padStart(2, "0")} */}
+                                00:{String(timer).padStart(2, "0")}
+                              </>
+                            ) : (
+                              <> 00:{String(timer).padStart(2, "0")}</>
+                            )
                           ) : (
-                            <> 00:{String(timer).padStart(2, "0")}</>
-                          )
-                        ) : (
-                          <>
-                            <input type="number" placeholder="Enter the Seconds" value={limitInput} onChange={handleLimitInputChange} />
-                          </>
-                        )}</div>
+                            <>
+                              <input type="number" placeholder="Enter the Seconds" value={limitInput} onChange={handleLimitInputChange} />
+                            </>
+                          )}
+                        </div>
 
                         <div>
                           {isTimerRunning ? (

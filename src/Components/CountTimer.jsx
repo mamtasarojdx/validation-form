@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 
 function CountTimer() {
@@ -8,7 +8,7 @@ function CountTimer() {
   const [isTimerRunning, setTimerRunning] = useState(false);
   const [timerCompleted, setTimerCompleted] = useState(false);
   const [isCountUp, setCountUp] = useState(true);
-  const [lastPausedTime, setLastPausedTime] = useState(0);
+  const [lastPausedTime, setLastPausedTime] = useState(false);
 
   const handleLimitInputChange = (event) => {
     setLimitInput(event.target.value);
@@ -25,14 +25,14 @@ function CountTimer() {
       setTimer(lastPausedTime || (isCountUp ? 0 : newLimit));
       setTimerCompleted(false);
       setTimerRunning(true);
-      setLastPausedTime(0);
+      setLastPausedTime(false);
     } else {
       toast.error("Please enter a positive number");
     }
   };
 
   const handleStopTimer = () => {
-    setLastPausedTime(timer);
+    setLastPausedTime(isCountUp ? limit-timer:timer);
     setTimerRunning(false);
   };
 
@@ -42,12 +42,17 @@ function CountTimer() {
     setTimer(0);
     setTimerCompleted(false);
     setTimerRunning(false);
-    setLastPausedTime(0);
+    setLastPausedTime(false);
   };
 
   const handleTimerCompletion = () => {
     setTimerCompleted(true);
-    // resetTimer()
+    setTimer(isCountUp ? limit : 0);
+    setTimerRunning(false);
+
+    setTimeout(() => {
+      setTimerCompleted(false);
+    }, 30);
   };
 
   const toggleCountType = () => {
@@ -59,20 +64,18 @@ function CountTimer() {
 
   useEffect(() => {
     let intervalId;
-
     if (isTimerRunning) {
       intervalId = setInterval(() => {
         setTimer((prevTimer) => {
           const updatedTimer = isCountUp ? prevTimer + 1 : prevTimer - 1;
 
-          if ((isCountUp && updatedTimer === limit) || (!isCountUp && updatedTimer === 0)) {
+          if ((isCountUp && updatedTimer >= limit) || (!isCountUp && updatedTimer <= 0)) {
             clearInterval(intervalId);
 
             setTimeout(() => {
               handleTimerCompletion();
             }, 1000);
           }
-
           return updatedTimer;
         });
       }, 1000);
