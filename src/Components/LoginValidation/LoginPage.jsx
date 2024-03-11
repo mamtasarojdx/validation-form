@@ -5,7 +5,7 @@ import { ToastContainer, toast, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import LoginData from "./LoginData.json";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const LoginPage = ({ onLogin }) => {
   const navigate = useNavigate();
@@ -14,39 +14,46 @@ const LoginPage = ({ onLogin }) => {
     password: "",
     rememberMe: false,
   };
-
+  const [totalTime, setTotalTime] = useState(0);
   const [values, setValues] = useState(initialValues);
   const [errors, setErrors] = useState({});
   const [isSubmit, setSubmit] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const location = useLocation();
 
-  useEffect(()=>{
-    const storedCredentials=localStorage.getItem('credentials')
-    if(storedCredentials){
-      const{email,password,rememberMe}=JSON.parse(storedCredentials);
-      if(rememberMe){
-        setValues({email,password,rememberMe:true});
+  useEffect(() => {
+    const storedCredentials = localStorage.getItem("credentials");
+    if (storedCredentials) {
+      const { email, password, rememberMe } = JSON.parse(storedCredentials);
+      if (rememberMe) {
+        setValues({ email, password, rememberMe: true });
         setRememberMe(true);
-      }else {
-        setValues({email:"",password:""});
-        setRememberMe(false)
+      } else {
+        setValues({ email: "", password: "" });
+        setRememberMe(false);
       }
     }
-
-  },[])
+  }, []);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
   const handleChange = (e) => {
-    const { name, value,checked } = e.target;
-    const newValue =name === "rememberMe" ?checked:value;
+    const { name, value, checked } = e.target;
+    const newValue = name === "rememberMe" ? checked : value;
     setValues({ ...values, [name]: newValue });
   };
 
+  useEffect(() => {
+    if (location.state && location.state.totalTime) {
+      setTotalTime(location.state.totalTime);
+    }
+  }, [location.state]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    setTotalTime(0);
     onLogin(values.email, values.password);
     const errors = validate(values);
     setErrors(errors);
@@ -57,10 +64,10 @@ const LoginPage = ({ onLogin }) => {
       if (user) {
         localStorage.setItem("loggedInUser", JSON.stringify(user));
         localStorage.setItem("credentials", JSON.stringify(values));
-        if(values.rememberMe){
-          localStorage.setItem('credentials',JSON.stringify({email:values.email,password:values.password,rememberMe:true}))
-        }else{
-          localStorage.removeItem('credentiala')
+        if (values.rememberMe) {
+          localStorage.setItem("credentials", JSON.stringify({ email: values.email, password: values.password, rememberMe: true }));
+        } else {
+          localStorage.removeItem("credentiala");
         }
 
         setTimeout(() => {
@@ -73,9 +80,8 @@ const LoginPage = ({ onLogin }) => {
         setTimeout(() => {
           navigate("/login-data", { state: user });
         }, 100);
-      } 
-      else {
-        setValues({ email: "", password: "", rememberMe: false }); 
+      } else {
+        setValues({ email: "", password: "", rememberMe: false });
         toast.error("Invalid email or password", {
           position: "top-center",
           transition: Slide,
@@ -132,6 +138,12 @@ const LoginPage = ({ onLogin }) => {
   return (
     <>
       <div className={`container ${style.loginPage}`}>
+        {/* {totalTime > 0 && (
+          <div>
+             Time: {totalTime} seconds
+          </div>
+        )} */}
+
         <div className="row">
           <div className={`col-lg-6 col-md-6 col-sm-12 ${style.img}`}>
             <img
@@ -179,10 +191,12 @@ const LoginPage = ({ onLogin }) => {
                 </div>
               </div>
               <p className="text-danger">{errors.password}</p>
+              <div setTotalTime={setTotalTime}>
+                <button type="submit" onClick={handleSubmit} className={`${style.loginBtn}`}>
+                  Login
+                </button>
+              </div>
 
-              <button type="submit" onClick={handleSubmit} className={`${style.loginBtn}`}>
-                Login
-              </button>
               <div className="container mt-5">
                 <div className="row">
                   <div className="col-lg-6">

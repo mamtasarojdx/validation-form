@@ -70,6 +70,7 @@
   padding: 5px 18px;
   border-style: none;
   margin: 18px 1px 0 105px;
+  position: relative;
 }
 
 h6 {
@@ -184,6 +185,7 @@ h6 {
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 .loginBtn {
+  position: relative;
   cursor: pointer;
   font-weight: 600;
   color: #fff;
@@ -324,4 +326,15 @@ Input[type="number"]:focus {
   margin: 20px 0 10px 0;
   border-radius: 4px;
   padding: 0px 10px 1px 10px;
+}
+
+.loginTimer{
+  position: absolute;
+  top: 21px;
+  right: 139px;
+  
+  background-color: #ef6f6a;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
 }

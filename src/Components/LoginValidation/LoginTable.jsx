@@ -7,15 +7,23 @@ import LoginData from "./LoginData.json";
 
 function LoginTable() {
   const location = useLocation();
-  const { userList, loggedInUser } = location.state || {};
-  // const loggedInUser = location.state ? location.state.loggedInUser : null;
+  // const { userList, loggedInUser } = location.state || {};
+  const { userList, loggedInUser, time} = location.state || {};
+   const timeRunning = location.state ? location.state.timeRunning : timeRunning;
+
+  // const isTimerRunning = location.state ? location.state.isTimerRunning : isTimerRunning;
 
   const navigate = useNavigate();
+
   console.log("userList:", userList);
   console.log("loggedInUser:", loggedInUser);
+  console.log("time", timeRunning);
+  console.log("time", time);
 
   function handleClick() {
     navigate("/login-data");
+    console.log("time", timeRunning);
+    console.log("time", time);
   }
 
   return (

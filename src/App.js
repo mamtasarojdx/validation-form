@@ -15,7 +15,10 @@ import PageNotFound from "./Components/LoginValidation/PageNotFound";
 import LoginTable from "./Components/LoginValidation/LoginTable";
 import { useState } from "react";
 import userData from "./Components/LoginValidation/LoginData.json";
-import CountTimer from "./Components/CountTimer";
+
+import LoginPageTimer from "./Components/LoginPageTimer";
+
+import LogOutTimer from "./Components/LogOutTimer.jsx";
 
 function App() {
   const [loggedInUser, setLoggedInUser] = useState(null);
@@ -33,9 +36,11 @@ function App() {
       <Routes>
         <Route exact path="/" element={<Protected />} />
         <Route exact path="/login-data" element={<Protected />} />
-        <Route exact path="/count-timer" element={<CountTimer />} />
+       
         <Route exact path="/login-page" element={<LoginPage onLogin={handleLogin} />} />
         <Route exact path="/login-table" element={<LoginTable loggedInUser={loggedInUser} />} />
+        <Route exact path="/login-timer" element={<LoginPageTimer />} />
+        <Route exact path="/logout-timer" element={<LogOutTimer />} />
         <Route path="*" exact element={<PageNotFound />} />
       </Routes>
     </BrowserRouter>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Style from "./LoginDataStyle.module.css";
 import UserData from "./LoginData.json";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 
 function LoginFormData() {
@@ -12,16 +12,19 @@ function LoginFormData() {
     password: "",
     rememberMe: false,
   };
-
+  const [time, setTime] = useState(0);
+  const [timerRunning2, setTimerRunning2] = useState(true);
   const [userList, setUserList] = useState([]);
   const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
   const [limitInput, setLimitInput] = useState("");
   const [limit, setLimit] = useState(null);
   const [timer, setTimer] = useState(0);
+
   const [isTimerRunning, setTimerRunning] = useState(false);
   const [timerCompleted, setTimerCompleted] = useState(false);
   const [isCountUp, setCountUp] = useState(true);
-  const [lastPausedTime, setLastPausedTime] = useState(false);
+  const [lastPausedTime, setLastPausedTime] = useState(0);
+  const location = useLocation();
 
   const handleLimitInputChange = (event) => {
     setLimitInput(event.target.value);
@@ -38,9 +41,9 @@ function LoginFormData() {
       setTimer(lastPausedTime || (isCountUp ? 0 : newLimit));
       setTimerCompleted(false);
       setTimerRunning(true);
-      setLastPausedTime(false);
+      setLastPausedTime(0);
     } else {
-      toast.error("Please enter a positive number");
+      toast.error("Please enter a valid number");
     }
   };
 
@@ -55,13 +58,15 @@ function LoginFormData() {
     setTimer(0);
     setTimerCompleted(false);
     setTimerRunning(false);
-    setLastPausedTime(false);
+    setLastPausedTime(0);
   };
 
   const handleTimerCompletion = () => {
     setTimerCompleted(true);
-    setTimer(isCountUp ? limit : 0);
+
     setTimerRunning(false);
+    setLimitInput("");
+    setLimit(null);
   };
 
   const toggleCountType = () => {
@@ -79,12 +84,12 @@ function LoginFormData() {
         setTimer((prevTimer) => {
           const updatedTimer = isCountUp ? prevTimer + 1 : prevTimer - 1;
 
-          if ((isCountUp && updatedTimer >= limit) || (!isCountUp && updatedTimer <= 0)) {
+          if ((isCountUp && updatedTimer === limit + 1) || (!isCountUp && updatedTimer === 0)) {
             clearInterval(intervalId);
-
-            setTimeout(() => {
-              handleTimerCompletion();
-            }, 1000);
+            handleTimerCompletion();
+            if (timerCompleted) {
+              resetTimer();
+            }
           }
           return updatedTimer;
         });
@@ -93,9 +98,6 @@ function LoginFormData() {
 
     return () => {
       clearInterval(intervalId);
-      if (timerCompleted) {
-        resetTimer();
-      }
     };
   }, [isTimerRunning, limit, isCountUp, timerCompleted]);
 
@@ -104,29 +106,60 @@ function LoginFormData() {
   };
 
   useEffect(() => {
-    if (!loggedInUser) {
-      navigate("/login-page");
-    } else {
-      const fetchedUserList = fetchUserListFromServer();
-      setUserList(fetchedUserList);
+    let interval;
 
-      setTimeout(() => {
-        setLoading(false);
-      });
+    if (timerRunning2) {
+      interval = setInterval(() => {
+        setTime((prevTimer) => prevTimer + 1);
+      }, 1000);
     }
-  }, [loggedInUser, navigate]);
 
-  const removeUserByEmail = (email) => {
-    const updatedUserList = userList?.filter((u) => u.email !== email);
-    setUserList(updatedUserList);
-    navigate("/login-table", { state: { userList, loggedInUser } });
-  };
+    return () => clearInterval(interval);
+  }, [timerRunning2]);
+  useEffect(() => {
+    if (!loggedInUser && time) {
+      setTimeout(() => {
+        sessionStorage.setItem(time, "seconds");
+        toast.success(`You have completed ${time} Seconds!`, {
+          autoClose: 2000,
+        });
+      }, 300);
+
+      navigate("/login-page", { state: { totalTime: time } });
+    }
+    // else {
+    //   const fetchedUserList = fetchUserListFromServer();
+    //   setUserList(fetchedUserList);
+
+    //   setTimeout(() => {
+    //     setLoading(false);
+    //   });
+    // }
+  }, [loggedInUser, navigate, time]);
+
+  useEffect(() => {
+    const fetchedUserList = fetchUserListFromServer();
+    setUserList(fetchedUserList);
+    setLoading(false);
+  }, [loggedInUser]);
 
   const handleReset = () => {
-    navigate("/login-page");
     localStorage.removeItem("loggedInUser");
-
     setUserList([]);
+    setTimerRunning2(false);
+  };
+
+  const removeUserByEmail = (email) => {
+    if (!loggedInUser && time) {
+      setTimeout(() => {
+        setTimerRunning2(true);
+      }, 300);
+    }
+
+    const updatedUserList = userList?.filter((u) => u.email !== email);
+    setUserList(updatedUserList);
+
+    navigate("/login-table", { state: { userList, loggedInUser } });
   };
 
   const InputValue = (name, value) => {
@@ -141,6 +174,7 @@ function LoginFormData() {
   return (
     <>
       <div class={`page-content page-container ${Style.pageForm}`} id="page-content">
+        <div className={` ${Style.loginTimer}`}>00:{String(time).padStart(2, "0")}</div>
         <div class={` ${Style.padding}`}>
           <div class="row container d-flex justify-content-center">
             <div class={`col-xl-6 col-md-12 ${Style.formCard}`}>
@@ -174,14 +208,7 @@ function LoginFormData() {
                         <div>
                           {" "}
                           {limit ? (
-                            !timerCompleted ? (
-                              <>
-                                {/* {String(Math.floor(timer / 60)).padStart(2, "0")}:{String(timer % 60).padStart(2, "0")} */}
-                                00:{String(timer).padStart(2, "0")}
-                              </>
-                            ) : (
-                              <> 00:{String(timer).padStart(2, "0")}</>
-                            )
+                            <> 00:{String(timer).padStart(2, "0")}</>
                           ) : (
                             <>
                               <input type="number" placeholder="Enter the Seconds" value={limitInput} onChange={handleLimitInputChange} />
