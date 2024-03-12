@@ -15,7 +15,8 @@ import PageNotFound from "./Components/LoginValidation/PageNotFound";
 import LoginTable from "./Components/LoginValidation/LoginTable";
 import { useState } from "react";
 import userData from "./Components/LoginValidation/LoginData.json";
-
+import { Provider } from 'react-redux';
+import store from "./Components/LoginValidation/store";
 import LoginPageTimer from "./Components/LoginPageTimer";
 
 import LogOutTimer from "./Components/LogOutTimer.jsx";
@@ -32,6 +33,7 @@ function App() {
   };
 
   return (
+    <Provider store={store}>
     <BrowserRouter>
       <Routes>
         <Route exact path="/" element={<Protected />} />
@@ -43,7 +45,7 @@ function App() {
         <Route exact path="/logout-timer" element={<LogOutTimer />} />
         <Route path="*" exact element={<PageNotFound />} />
       </Routes>
-    </BrowserRouter>
+    </BrowserRouter></Provider>
   );
 }
 

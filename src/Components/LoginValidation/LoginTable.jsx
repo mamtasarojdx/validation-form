@@ -4,26 +4,37 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import Style from "./LoginTableStyle.module.css";
 import LoginData from "./LoginData.json";
+import { incrementTimer } from "./timerActions";
+
+import { useDispatch, useSelector } from "react-redux";
 
 function LoginTable() {
+  const dispatch = useDispatch();
   const location = useLocation();
-  // const { userList, loggedInUser } = location.state || {};
-  const { userList, loggedInUser, time} = location.state || {};
-   const timeRunning = location.state ? location.state.timeRunning : timeRunning;
+  const { userList, loggedInUser } = location.state || {};
+  const isTimeRunning = useSelector((state) => state.isRunning);
 
-  // const isTimerRunning = location.state ? location.state.isTimerRunning : isTimerRunning;
+  useEffect(() => {
+    if (isTimeRunning) {
+      const intervalId = setInterval(() => {
+        dispatch(incrementTimer());
+        console.log(incrementTimer);
+
+      }, 1000);
+
+      return () => {
+        clearInterval(intervalId);
+      };
+    }
+  }, [isTimeRunning]);
 
   const navigate = useNavigate();
 
   console.log("userList:", userList);
   console.log("loggedInUser:", loggedInUser);
-  console.log("time", timeRunning);
-  console.log("time", time);
 
   function handleClick() {
     navigate("/login-data");
-    console.log("time", timeRunning);
-    console.log("time", time);
   }
 
   return (
