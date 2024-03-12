@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
-
 import style from "./LoginDataStyle.module.css";
 import { ToastContainer, toast, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import LoginData from "./LoginData.json";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from 'react-redux';
-import { incrementTimer, startTimer } from "./timerActions";
+import { useTimer } from './TimerContext';
 
 const LoginPage = ({ onLogin }) => {
   const navigate = useNavigate();
@@ -16,9 +14,8 @@ const LoginPage = ({ onLogin }) => {
     password: "",
     rememberMe: false,
   };
-  const dispatch = useDispatch();
-  const isTimeRunning = useSelector((state) => state.isRunning);
   const [totalTime, setTotalTime] = useState(0);
+  const { resetTimer } = useTimer(); 
   const [values, setValues] = useState(initialValues);
   const [errors, setErrors] = useState({});
   const [isSubmit, setSubmit] = useState(false);
@@ -57,6 +54,7 @@ const LoginPage = ({ onLogin }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    resetTimer()
     setTotalTime(0);
     onLogin(values.email, values.password);
     const errors = validate(values);
@@ -66,8 +64,6 @@ const LoginPage = ({ onLogin }) => {
     if (Object.keys(errors).length === 0) {
       const user = LoginData.find((user) => user.email === values.email && user.password === values.password);
       if (user) {
-        dispatch(incrementTimer());
-        console.log(incrementTimer);
         localStorage.setItem("loggedInUser", JSON.stringify(user));
         localStorage.setItem("credentials", JSON.stringify(values));
         if (values.rememberMe) {
@@ -96,17 +92,7 @@ const LoginPage = ({ onLogin }) => {
       }
     }
   };
-  useEffect(() => {
-    if (isTimeRunning) {
-      const intervalId = setInterval(() => {
-        dispatch(incrementTimer());
-      }, 1000);
 
-      return () => {
-        clearInterval(intervalId);
-      };
-    }
-  }, [isTimeRunning]);
   const validate = (values) => {
     const errors = {};
 

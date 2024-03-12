@@ -3,30 +3,18 @@ import { Navigate, json, useLocation, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Style from "./LoginTableStyle.module.css";
+import { useTimer } from "./TimerContext";
 import LoginData from "./LoginData.json";
-import { incrementTimer } from "./timerActions";
-
-import { useDispatch, useSelector } from "react-redux";
 
 function LoginTable() {
-  const dispatch = useDispatch();
   const location = useLocation();
+  // const { userList, loggedInUser } = location.state || {};
   const { userList, loggedInUser } = location.state || {};
-  const isTimeRunning = useSelector((state) => state.isRunning);
+  const { time, toggleTimer, incrementTime, TimeRunning, timeRunning } = useTimer();
 
-  useEffect(() => {
-    if (isTimeRunning) {
-      const intervalId = setInterval(() => {
-        dispatch(incrementTimer());
-        console.log(incrementTimer);
+  //  const timeRunning = location.state ? location.state.timeRunning : timeRunning;
 
-      }, 1000);
-
-      return () => {
-        clearInterval(intervalId);
-      };
-    }
-  }, [isTimeRunning]);
+  // const isTimerRunning = location.state ? location.state.isTimerRunning : isTimerRunning;
 
   const navigate = useNavigate();
 
@@ -35,7 +23,21 @@ function LoginTable() {
 
   function handleClick() {
     navigate("/login-data");
+
+    console.log("time", time);
   }
+
+  useEffect(() => {
+    let interval;
+
+    if (timeRunning) {
+      interval = setInterval(() => {
+        incrementTime();
+      }, 1000);
+    }
+
+    return () => clearInterval(interval);
+  }, [timeRunning, incrementTime]);
 
   return (
     <>
