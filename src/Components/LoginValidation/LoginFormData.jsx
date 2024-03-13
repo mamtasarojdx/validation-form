@@ -3,8 +3,7 @@ import Style from "./LoginDataStyle.module.css";
 import UserData from "./LoginData.json";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
-import { useTimer } from './TimerContext';
-
+import { useTimer } from "./TimerContext";
 
 function LoginFormData() {
   const navigate = useNavigate();
@@ -71,9 +70,9 @@ function LoginFormData() {
   };
 
   const toggleCountType = () => {
-    if (!isTimerRunning) {
+    if (!limit) {
       setCountUp((prevCountUp) => !prevCountUp);
-      resetTimer();
+      // resetTime();
     }
   };
 
@@ -129,6 +128,7 @@ function LoginFormData() {
       navigate("/login-page", { state: { totalTime: time, timeRunning } });
       console.log(time);
     }
+
     // else {
     //   const fetchedUserList = fetchUserListFromServer();
     //   setUserList(fetchedUserList);
@@ -148,7 +148,6 @@ function LoginFormData() {
   const handleReset = () => {
     localStorage.removeItem("loggedInUser");
     setUserList([]);
-    // resetTimer()
   };
 
   const removeUserByEmail = (email) => {
@@ -172,7 +171,9 @@ function LoginFormData() {
   return (
     <>
       <div class={`page-content page-container ${Style.pageForm}`} id="page-content">
-        <div className={` ${Style.loginTimer}`}>00:{String(time).padStart(2, "0")}</div>
+        <div className={` ${Style.loginTimer}`}>
+          {String(Math.floor(time / 60)).padStart(2, "0")}:{String(time % 60).padStart(2, "0")}
+        </div>
         <div class={` ${Style.padding}`}>
           <div class="row container d-flex justify-content-center">
             <div class={`col-xl-6 col-md-12 ${Style.formCard}`}>

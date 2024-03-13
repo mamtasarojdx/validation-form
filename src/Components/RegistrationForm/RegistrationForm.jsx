@@ -254,19 +254,7 @@ const RegistrationForm = () => {
                           </label>{" "}
                         </div>
 
-                        {/* <Select
-                            options={Country.getAllCountries()}
-                            getOptionLabel={(options) => {
-                              return options["name"];
-                            }}
-                            getOptionValue={(options) => {
-                              return options["name"];
-                            }}
-                            value={values.country}
-                            onChange={(value) => {
-                              setValues({ country: value, state: null, city: null }, false);
-                            }}
-                          /> */}
+                       
 
 
                         <div className="col-md-12 mb-1">

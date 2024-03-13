@@ -5,7 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import LoginData from "./LoginData.json";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useTimer } from './TimerContext';
+import { useTimer } from "./TimerContext";
 
 const LoginPage = ({ onLogin }) => {
   const navigate = useNavigate();
@@ -15,7 +15,7 @@ const LoginPage = ({ onLogin }) => {
     rememberMe: false,
   };
   const [totalTime, setTotalTime] = useState(0);
-  const { resetTimer } = useTimer(); 
+  const { resetTimer } = useTimer();
   const [values, setValues] = useState(initialValues);
   const [errors, setErrors] = useState({});
   const [isSubmit, setSubmit] = useState(false);
@@ -54,7 +54,7 @@ const LoginPage = ({ onLogin }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    resetTimer()
+    resetTimer();
     setTotalTime(0);
     onLogin(values.email, values.password);
     const errors = validate(values);

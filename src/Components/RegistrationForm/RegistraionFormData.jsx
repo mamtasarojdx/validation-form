@@ -12,7 +12,7 @@ const location = useLocation();
   const formData=location.state?.formData || {}
 
   const handleReset = () => {
-    navigate("/");
+    navigate("/registration-page");
   };
   
   return (

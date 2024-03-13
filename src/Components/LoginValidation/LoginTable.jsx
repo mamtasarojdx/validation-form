@@ -8,14 +8,8 @@ import LoginData from "./LoginData.json";
 
 function LoginTable() {
   const location = useLocation();
-  // const { userList, loggedInUser } = location.state || {};
   const { userList, loggedInUser } = location.state || {};
-  const { time, toggleTimer, incrementTime, TimeRunning, timeRunning } = useTimer();
-
-  //  const timeRunning = location.state ? location.state.timeRunning : timeRunning;
-
-  // const isTimerRunning = location.state ? location.state.isTimerRunning : isTimerRunning;
-
+  const { time,incrementTime,timeRunning } = useTimer();
   const navigate = useNavigate();
 
   console.log("userList:", userList);

@@ -4,10 +4,13 @@ const TimerContext = createContext();
 
 export const TimerProvider = ({ children }) => {
   const storedTotalTime = localStorage.getItem("totalTime");
-  const initialTime = storedTotalTime ? parseInt(storedTotalTime, 10) : 0;
+  const initialTime = storedTotalTime ? parseInt(storedTotalTime) : 0;
+
+  const storedRunningState = localStorage.getItem("timerRunning");
+  const initialRunningState = storedRunningState ? JSON.parse(storedRunningState) : true;
 
   const [time, setTime] = useState(initialTime);
-  const [timeRunning, setTimeRunning] = useState(true);
+  const [timeRunning, setTimeRunning] = useState(initialRunningState);
 
   const incrementTime = () => {
     if (timeRunning) {
@@ -17,11 +20,6 @@ export const TimerProvider = ({ children }) => {
 
   const resetTime = () => {
     setTime(0);
-  };
-  const TimeRunning = () => {
-    if (timeRunning) {
-      setTimeRunning(true);
-    }
   };
 
   const toggleTimer = () => {
@@ -35,8 +33,13 @@ export const TimerProvider = ({ children }) => {
   useEffect(() => {
     localStorage.setItem("totalTime", time);
   }, [time]);
+  console.log(time);
 
-  return <TimerContext.Provider value={{ time, incrementTime, resetTimer, TimeRunning, timeRunning, toggleTimer }}>{children}</TimerContext.Provider>;
+  useEffect(() => {
+    sessionStorage.setItem("timerRunning", JSON.stringify(timeRunning));
+  }, [timeRunning]);
+
+  return <TimerContext.Provider value={{ time, incrementTime, resetTimer, timeRunning, toggleTimer }}>{children}</TimerContext.Provider>;
 };
 
 export const useTimer = () => {
