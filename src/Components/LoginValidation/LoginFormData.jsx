@@ -127,16 +127,14 @@ function LoginFormData() {
 
       navigate("/login-page", { state: { totalTime: time, timeRunning } });
       console.log(time);
+    } else {
+      const fetchedUserList = fetchUserListFromServer();
+      setUserList(fetchedUserList);
+
+      setTimeout(() => {
+        setLoading(false);
+      });
     }
-
-    // else {
-    //   const fetchedUserList = fetchUserListFromServer();
-    //   setUserList(fetchedUserList);
-
-    //   setTimeout(() => {
-    //     setLoading(false);
-    //   });
-    // }
   }, [loggedInUser, navigate, time, timeRunning]);
 
   useEffect(() => {
@@ -155,8 +153,6 @@ function LoginFormData() {
     setUserList(updatedUserList);
 
     navigate("/login-table", { state: { userList, loggedInUser } });
-    localStorage.setItem("time", time);
-    console.log(time);
   };
 
   const InputValue = (name, value) => {
@@ -187,7 +183,7 @@ function LoginFormData() {
                       <p className="fw-bold mt-2">{InputValue(loggedInUser?.title)}</p>
 
                       <p class={`fw-bold ${Style.cardName}`}>{InputValue(loggedInUser?.name)}</p>
-                      <div>
+                      <div className={`${Style.tableDiv}`}>
                         <Link
                           to="/login-table"
                           state={{ userList, loggedInUser }}
@@ -197,6 +193,11 @@ function LoginFormData() {
                           className={`${Style.tableBtn}`}
                         >
                           Go To User List
+                        </Link>{" "}
+                      </div>
+                      <div>
+                        <Link to="/company-table" state={{ loggedInUser }} className={`${Style.tableBtn}`}>
+                          Go To Company List
                         </Link>
                       </div>
 

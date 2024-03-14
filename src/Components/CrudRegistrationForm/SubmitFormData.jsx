@@ -21,77 +21,77 @@ function SubmitFormData(props) {
     localStorage.removeItem("item");
     navigate("/company-registration");
   };
-
   return (
     <div>
-      <>
-        <div className="text-center">
-          <h2 className="text-center text-warning mb-5 text-decoration-underline">
-            User Form Data
-          </h2>
+    <>
+      <div className="text-center">
+        <h2 className="text-center text-warning mb-5 text-decoration-underline">User Form Data</h2>
 
-          <h4>
-            First Name:
-            <span className="text-primary "> {item.firstName}</span>
-          </h4>
+        <h4>
+          CompanyName:
+          <span className="text-primary "> {item.CompanyName}</span>
+        </h4>
 
-          <h4>
-            Last Name:
-            <span className="text-primary"> {item.lastName}</span>
-          </h4>
+        <h4>
+          OwnerName:
+          <span className="text-primary"> {item.OwnerName}</span>
+        </h4>
 
-          <h4>
-            Email:
-            <span className="text-primary"> {item.email}</span>
-          </h4>
+        <h4>
+          Email:
+          <span className="text-primary"> {item.email}</span>
+        </h4>
 
-          <h4>
-            Phone:
-            <span className="text-primary"> {item.phone}</span>
-          </h4>
+        <h4>
+          companyType:
+          <span className="text-primary"> {item.companyType}</span>
+        </h4>
 
-          <h4>
-            Qualification:
-            <span className="text-primary"> {item.qualification}</span>
-          </h4>
+        <h4>
+          zipCode:
+          <span className="text-primary"> {item.zipCode}</span>
+        </h4>
 
-          <h4>
-            Gender:
-            <span className="text-primary"> {item.gender}</span>
-          </h4>
+        <h4>
+          street:
+          <span className="text-primary"> {item.street}</span>
+        </h4>
 
-          <h4>
-            Password:
-            <span className="text-primary"> {item.password}</span>
-          </h4>
+        <h4>
+          Password:
+          <span className="text-primary"> {item.password}</span>
+        </h4>
 
-          <h4>
-            Country:
-            <span className="text-primary"> {item.country}</span>
-          </h4>
+        <h4>
+          Country:
+          <span className="text-primary"> {item.country}</span>
+        </h4>
 
-          <h4>
-            State:
-            <span className="text-primary"> {item.state}</span>
-          </h4>
+        <h4>
+          State:
+          <span className="text-primary"> {item.state}</span>
+        </h4>
 
-          <h4>
-            City:
-            <span className="text-primary"> {item.city}</span>
-          </h4>
+        <h4>
+          City:
+          <span className="text-primary"> {item.city}</span>
+        </h4>
+        <h4>
+          userIcon:
+          <span className="text-primary"> {item.userIcon}</span>
+        </h4>
 
-          <button
-            type="button"
-            className="btn btn-secondary btn-lg mt-5"
-            onClick={handleReset}
-          >
-            Back To Form
-          </button>
-        </div>
+        <h4>
+          companyLogo:
+          <span className="text-primary"> {item.companyLogo}</span>
+        </h4>
 
-        
-      </>
-    </div>
+        <button type="button" className="btn btn-secondary btn-lg mt-5" onClick={handleReset}>
+          Back To Form
+        </button>
+      </div>
+    </>
+  </div>
   );
 }
 

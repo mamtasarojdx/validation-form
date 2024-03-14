@@ -22,6 +22,7 @@
 .formCard {
   margin-top: 50px;
   margin-left: 8%;
+  width: 632px;
 }
 .m-r-0 {
   margin-right: 0px;
@@ -261,16 +262,18 @@ h6 {
   width: 89.2%;
 }
 .cardName {
-  margin-top: -5%;
+  margin-top: -6%;
+}
+.tableDiv {
+  margin-top: -4%;
 }
 .tableBtn {
   color: #072cf0;
- 
+
   font-weight: bolder;
 }
 .timerText {
   font-weight: bolder;
- 
 }
 
 Input[type="number"]:focus {
@@ -311,28 +314,28 @@ Input[type="number"]:focus {
   margin-left: 10px;
   border-radius: 4px;
 }
-.tabSpan{
+.tabSpan {
   margin-top: 8px;
 }
 .timerButton:focus {
   border-style: none;
   outline: none;
 }
-.timerButton{
+.timerButton {
   border-style: none;
   outline: none;
   background-color: #5b83a3;
   color: white;
-  margin: 20px 0 10px 0;
+  margin: 15px 0 10px 0;
   border-radius: 4px;
   padding: 0px 10px 1px 10px;
 }
 
-.loginTimer{
+.loginTimer {
   position: absolute;
   top: 21px;
   right: 139px;
-  
+
   background-color: #ef6f6a;
   color: white;
   padding: 10px 20px;

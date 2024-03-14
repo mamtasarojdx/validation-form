@@ -21,12 +21,15 @@ import LoginPageTimer from "./Components/LoginPageTimer";
 import LogOutTimer from "./Components/LogOutTimer.jsx";
 import { TimerProvider } from "./Components/LoginValidation/TimerContext.jsx";
 import CompanyRegistrationForm from "./Components/CrudRegistrationForm/CompanyRegistrationForm.jsx";
+
 import SubmitFormData from "./Components/CrudRegistrationForm/SubmitFormData.jsx";
+import CrudTableList from "./Components/CrudRegistrationTable/CrudTableList.jsx";
 
 function App() {
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [timeRunning, setTimeRunning] = useState(true);
   const [time, setTime] = useState(true);
+  const [userList, setUserList] = useState([]);
 
   const handleLogin = (email, password) => {
     const user = userData.find((user) => user.email === email);
@@ -38,23 +41,25 @@ function App() {
     }
   };
 
+  const updateUserList = (newUserData) => {
+    setUserList((prevUserList) => [...prevUserList, { id: Date.now(), ...newUserData }]);
+  };
+
   return (
     <TimerProvider>
       <BrowserRouter>
         <Routes>
           <Route exact path="/" element={<Protected />} />
           <Route exact path="/login-data" element={<Protected />} />
-       
-          <Route exact path="/submit-page" element={<SubmitFormData/>}></Route>
-          <Route exact path="/home" element={<HomePage />}></Route> 
-          <Route exact path="/registration-page" element={<RegistrationForm/>}></Route> 
+          <Route exact path="/home" element={<HomePage />}></Route>
+          <Route exact path="/registration-page" element={<RegistrationForm />}></Route>
           <Route exact path="/login-page" element={<LoginPage onLogin={handleLogin} />} />
           <Route exact path="/login-table" element={<LoginTable loggedInUser={loggedInUser} />} />
-          <Route exact path="/registration" element={<RegistrationFormData/>}></Route>
+          <Route exact path="/registration" element={<RegistrationFormData />}></Route>
           <Route path="*" exact element={<PageNotFound />} />
-          <Route exact path="/company-registration" element={<CompanyRegistrationForm/>}></Route>
-          {/* <Route exact path="/login-timer" element={<LoginPageTimer />} /> */}
-          {/* <Route exact path="/logout-timer" element={<LogOutTimer />} /> */}
+          <Route exact path="/company-registration" element={<CompanyRegistrationForm updateUserList={updateUserList} />}></Route>
+          <Route exact path="/submit-page" element={<SubmitFormData />}></Route>
+          <Route exact path="/company-table" element={<CrudTableList userList={userList} />}></Route>
         </Routes>
       </BrowserRouter>
     </TimerProvider>
