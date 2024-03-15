@@ -4,12 +4,12 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Style from "./CrudTableStyle.module.css";
 import { useTimer } from "../LoginValidation/TimerContext";
 
-function CrudTableList({ userList: initialUserList }) {
+function CrudTableList() {
   const { time, incrementTime, timeRunning } = useTimer();
   const navigate = useNavigate();
   const location = useLocation();
   const { loggedInUser } = location.state || {};
-  const [userList, setUserList] = useState(initialUserList);
+  const [userList, setUserList] = useState();
 
   useEffect(() => {
     const registrationData = localStorage.getItem("registrationValues");
