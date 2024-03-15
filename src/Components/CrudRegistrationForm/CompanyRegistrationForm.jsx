@@ -56,7 +56,7 @@ const initialValues = {
   companyLogo: null,
 };
 
-function CompanyRegistrationForm({ updateUserList }) {
+function CompanyRegistrationForm() {
   const { time, incrementTime, timeRunning } = useTimer();
   const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
   const navigate = useNavigate();
@@ -73,7 +73,6 @@ function CompanyRegistrationForm({ updateUserList }) {
       const formDataWithUser = { ...values, userName: loggedInUser.name };
 
       localStorage.setItem("registrationValues", JSON.stringify(formDataWithUser));
-      updateUserList(values);
 
       navigate("/company-table", { state: { loggedInUser } });
     } catch (error) {

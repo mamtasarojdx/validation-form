@@ -15,23 +15,21 @@ import PageNotFound from "./Components/LoginValidation/PageNotFound";
 import LoginTable from "./Components/LoginValidation/LoginTable";
 import { useState } from "react";
 import userData from "./Components/LoginValidation/LoginData.json";
+
 import { TimerProvider } from "./Components/LoginValidation/TimerContext.jsx";
 import CompanyRegistrationForm from "./Components/CrudRegistrationForm/CompanyRegistrationForm.jsx";
+
 import SubmitFormData from "./Components/CrudRegistrationForm/SubmitFormData.jsx";
 import CrudTableList from "./Components/CrudRegistrationTable/CrudTableList.jsx";
 
 function App() {
   const [loggedInUser, setLoggedInUser] = useState(null);
-  const [timeRunning, setTimeRunning] = useState(true);
-  const [time, setTime] = useState(true);
 
   const handleLogin = (email, password) => {
     const user = userData.find((user) => user.email === email);
 
     if (user && loggedInUser) {
       setLoggedInUser(user);
-      setTimeRunning(true);
-      setTime(true);
     }
   };
 

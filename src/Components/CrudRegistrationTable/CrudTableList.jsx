@@ -7,15 +7,18 @@ import { useTimer } from "../LoginValidation/TimerContext";
 function CrudTableList() {
   const { time, incrementTime, timeRunning } = useTimer();
   const navigate = useNavigate();
+  const [userList, setUserList] = useState([]);
   const location = useLocation();
   const { loggedInUser } = location.state || {};
-  const [userList, setUserList] = useState();
 
   useEffect(() => {
     const registrationData = localStorage.getItem("registrationValues");
     if (registrationData) {
       const newData = JSON.parse(registrationData);
+
       setUserList((prevUserList) => [...prevUserList, { id: Date.now(), ...newData }]);
+
+      localStorage.setItem("userList", JSON.stringify([...userList, { id: Date.now(), ...newData }]));
     }
   }, []);
 
